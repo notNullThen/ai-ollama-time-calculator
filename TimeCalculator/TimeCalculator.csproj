@@ -7,4 +7,8 @@
     <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AIOrchestrator" Version="1.0.0" />
+  </ItemGroup>
+
 </Project>

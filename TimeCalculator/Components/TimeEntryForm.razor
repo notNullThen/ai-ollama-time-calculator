@@ -1,3 +1,4 @@
+@using TimeCalculator.AiCore
 @using TimeCalculator.Core
 @using TimeCalculator.Core.Types
 
@@ -45,14 +46,25 @@
 
 <div class="mt-3">
     <div class="d-flex flex-column">
-        <label class="form-label mb-1">Explain - we'll try to do it!</label>
-        <input type="text" @bind="TimeCalculator.CurrentTimeEntry.Time.Seconds"
+        <label class="form-label mb-1">Explain it - we'll try to do it!</label>
+        <input type="text" @bind="AiInteraction.UserInput"
                class="form-control" style="width: 400px; height: 100px;"/>
+        <button class="btn btn-primary gap-3 mt-3" @onclick="AiInteraction.AskAsync" style="width: 400px;">Do it!</button>
+    </div>
+</div>
+
+<div class="mt-3">
+    <div class="d-flex flex-column">
+        <label class="form-label mb-1">AI Debug Details</label>
+        <input type="text" value="@AiInteraction.GetContext()"
+               class="form-control" style="width: 400px; height: 100px;" readonly/>
     </div>
 </div>
 
 @code {
     [Parameter, EditorRequired] public TimeCalculatorProgramm TimeCalculator { get; set; } = default!;
+
+    public AiInteraction AiInteraction => new(TimeCalculator);
 
     [Parameter] public EventCallback OnChanged { get; set; }
 
