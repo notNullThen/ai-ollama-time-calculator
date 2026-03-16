@@ -55,8 +55,9 @@
 
     <div class="d-flex flex-column">
         <label class="form-label mb-1">AI Debug Details</label>
-        <textarea value="@AiInteraction.GetContext()"
-               class="form-control" style="width: 400px; height: 300px;" readonly></textarea>
+        <div class="form-control" style="width: 400px; height: 300px; overflow-y: auto; display: flex; flex-direction: column-reverse; background-color: var(--tc-surface-2);">
+            <div style="white-space: pre-wrap; font-family: monospace; font-size: 0.8rem; padding: 5px; color: var(--tc-fg);">@AiInteraction.GetContext()</div>
+        </div>
     </div>
 </div>
 
@@ -77,7 +78,6 @@
     {
         _ = NotifyChangedAsync();
     }
-
 
     private void AddTimeEntry()
     {
