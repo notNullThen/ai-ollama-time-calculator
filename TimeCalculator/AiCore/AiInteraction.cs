@@ -29,7 +29,6 @@ public class AiInteraction
     public async Task AskAsync()
     {
         await AiManager!.StartAsync(UserInput);
-        Init();
     }
 
     public string GetContext() => AiManager!.ContextHandler.GetContextJson();
