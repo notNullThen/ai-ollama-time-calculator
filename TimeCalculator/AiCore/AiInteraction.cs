@@ -1,6 +1,5 @@
 using AIOrchestrator.Core;
 using AIOrchestrator.Core.Types;
-
 using TimeCalculator.Core;
 
 namespace TimeCalculator.AiCore;
@@ -22,9 +21,7 @@ public class AiInteraction
         Init();
     }
 
-
     private const string ModelName = "qwen2.5-coder:7b";
-
 
     public async Task AskAsync()
     {
@@ -50,4 +47,3 @@ public class AiInteraction
         OnContextUpdated?.Invoke(this, e);
     }
 }
-
