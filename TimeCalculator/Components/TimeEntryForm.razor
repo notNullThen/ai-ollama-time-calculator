@@ -62,9 +62,8 @@
     <div class="d-flex flex-column flex-grow-1" style="max-width: 500px;">
         <div class="d-flex justify-content-between align-items-center mb-1">
             <label class="form-label mb-0">AI Debug Details</label>
-            <button class="btn btn-link btn-sm p-0 text-decoration-none"
-                    onclick="var t=document.getElementById('ai-debug-out').innerText;if(navigator.clipboard){navigator.clipboard.writeText(t)}else{var e=document.createElement('textarea');e.value=t;document.body.appendChild(e);e.select();document.execCommand('copy');document.body.removeChild(e)}this.innerText='Copied!';var b=this;setTimeout(function(){b.innerText='Copy'},2000);"
-                    style="font-size: 0.75rem;">
+            <button class="btn btn-outline-primary btn-sm"
+                    onclick="var t=document.getElementById('ai-debug-out').innerText;if(navigator.clipboard){navigator.clipboard.writeText(t)}else{var e=document.createElement('textarea');e.value=t;document.body.appendChild(e);e.select();document.execCommand('copy');document.body.removeChild(e)}this.innerText='Copied!';var b=this;setTimeout(function(){b.innerText='Copy'},2000);">
                 Copy
             </button>
         </div>
