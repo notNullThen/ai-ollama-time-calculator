@@ -33,7 +33,7 @@ public sealed class AiAppFacade(TimeCalculatorProgramm timeCalculator) : AiAppFa
 Every time entry is an ATOMIC UNIT. You must complete one unit before starting the next.
 One Unit = ({nameof(SetType)}) -> ({nameof(SetHours)}/{nameof(SetMinutes)}/{nameof(SetSeconds)}) -> ({nameof(AddTimeEntry)}).
 
-Last Unit = ({nameof(SetType)}) -> ({nameof(SetRemainedTime)}) -> ({nameof(AddTimeEntry)}) -> ({nameof(Exit)}).
+Last Unit = ({nameof(SetType)}) -> ({nameof(SetRemainedTime)}) -> ({nameof(AddTimeEntry)}).
 
 # CRITICAL LOGIC GATES
 - FORBIDDEN: Calling {nameof(SetType)} twice in a row without {nameof(AddTimeEntry)} in between.
