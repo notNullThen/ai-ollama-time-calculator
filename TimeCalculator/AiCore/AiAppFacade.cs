@@ -75,7 +75,7 @@ Last Unit = ({nameof(SetType)}) -> ({nameof(SetRemainedTime)}) -> ({nameof(AddTi
             {
                 Name = nameof(AddTimeEntry),
                 Description =
-                    "Saves the entry to the permanent table. You MUST call this after setting Type/H/M/S and BEFORE starting the next entry.",
+                    "Saves the entry to the table. You MUST call this after setting Type/H/M/S and BEFORE starting the next entry. Returns the updated table.",
                 Parameters = [],
             },
             new()
