@@ -51,37 +51,38 @@ Last Unit = ({nameof(SetType)}) -> ({nameof(SetRemainedTime)}) -> ({nameof(AddTi
             {
                 Name = nameof(SetHours),
                 Description = "Sets the hour value for the entry. Range 0-23.",
-                Parameters = [new() { Name = "hours", Description = "int" }],
+                Parameters = [new() { Name = "hours", Description = "int. Default 0." }],
             },
             new()
             {
                 Name = nameof(SetMinutes),
                 Description = "Sets the minute value for the entry. Range 0-59.",
-                Parameters = [new() { Name = "minutes", Description = "int" }],
+                Parameters = [new() { Name = "minutes", Description = "int. Default 0." }],
             },
             new()
             {
                 Name = nameof(SetSeconds),
                 Description = "Sets the second value for the entry. Range 0-59.",
-                Parameters = [new() { Name = "seconds", Description = "int" }],
+                Parameters = [new() { Name = "seconds", Description = "int. Default 0." }],
             },
             new()
             {
                 Name = nameof(SetType),
                 Description = "Sets the category ('Work' or 'Break') for the entry.",
-                Parameters = [new() { Name = "type", Description = "string" }],
+                Parameters = [new() { Name = "type", Description = "string. Default Work." }],
+            },
+            new()
+            {
+                Name = nameof(SetRemainedTime),
+                Description =
+                    $"Calculates the remaining Work time for the entry. After caling it you still need to save the time to the table.",
+                Parameters = [],
             },
             new()
             {
                 Name = nameof(AddTimeEntry),
                 Description =
                     "Saves the entry to the table. You MUST call this after setting Type/H/M/S and BEFORE starting the next entry. Returns the updated table.",
-                Parameters = [],
-            },
-            new()
-            {
-                Name = nameof(SetRemainedTime),
-                Description = "Calculates the remaining Work time for the entry.",
                 Parameters = [],
             },
             new()
