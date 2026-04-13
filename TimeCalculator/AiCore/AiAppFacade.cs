@@ -11,13 +11,29 @@ public sealed class AiAppFacade(TimeCalculatorProgramm timeCalculator) : AiAppFa
     // complex logic with multiple function calls.
     // Otherwise we would have only one function call to set the time entry.
 
-    public void SetHours(int hours) => timeCalculator.SetHours(hours);
+    public string SetHours(string hours)
+    {
+        timeCalculator.SetHours(int.Parse(hours));
+        return ReturnTempSuccess();
+    }
 
-    public void SetMinutes(int minutes) => timeCalculator.SetMinutes(minutes);
+    public string SetMinutes(string minutes)
+    {
+        timeCalculator.SetMinutes(int.Parse(minutes));
+        return ReturnTempSuccess();
+    }
 
-    public void SetSeconds(int seconds) => timeCalculator.SetSeconds(seconds);
+    public string SetSeconds(string seconds)
+    {
+        timeCalculator.SetSeconds(int.Parse(seconds));
+        return ReturnTempSuccess();
+    }
 
-    public void SetType(TimeType type) => timeCalculator.SetType(type);
+    public string SetType(string type)
+    {
+        timeCalculator.SetType(Enum.Parse<TimeType>(type));
+        return ReturnTempSuccess();
+    }
 
     public TimeEntry[] AddTimeEntry()
     {
@@ -25,24 +41,54 @@ public sealed class AiAppFacade(TimeCalculatorProgramm timeCalculator) : AiAppFa
         return GetTimeEntriesTable();
     }
 
-    public TimeData SetRemainedTime()
+    public TimeEntry[] SetRemainedTime()
     {
         timeCalculator.SetRemainedTime();
-        return timeCalculator.CurrentTimeEntry.Time;
+        return AddTimeEntry();
     }
 
     public override string GetConstraints() =>
         @$"
-# THE 'ATOMIC ENTRY' RULE
-Every time entry is an ATOMIC UNIT. You must complete one unit before starting the next.
-One Unit = ({nameof(SetType)}) -> ({nameof(SetHours)}/{nameof(SetMinutes)}/{nameof(SetSeconds)}) -> ({nameof(AddTimeEntry)}).
+# CORE RULE
+Process the user request as a sequence of entries.
+Each entry MUST be completed before the next begins.
 
-Last Unit = ({nameof(SetType)}) -> ({nameof(SetRemainedTime)}) -> ({nameof(AddTimeEntry)}).
+# ENTRY FLOW
+Each entry follows:
+({nameof(SetType)}) → (set time OR {nameof(SetRemainedTime)}) → ({nameof(AddTimeEntry)})
 
-# CRITICAL LOGIC GATES
-- FORBIDDEN: Calling {nameof(SetType)} twice in a row without {nameof(AddTimeEntry)} in between.
-- FORBIDDEN: Calculating a new time segment while a previous segment is still 'Open' (Unwritten).
-- REQUIRED: You must call {nameof(AddTimeEntry)} after setting the time entry.
+Repeat this flow for every segment.
+
+# STRICT RULES
+
+- After {nameof(SetType)} the entry is OPEN
+- An OPEN entry MUST be closed with {nameof(AddTimeEntry)}
+- NEVER call {nameof(SetType)} before closing the previous entry
+- {nameof(SetType)} is ONLY allowed after {nameof(AddTimeEntry)}
+
+- One segment = one entry
+- DO NOT merge or skip segments
+- DO NOT change an entry once started
+
+- If last segment has no duration → use {nameof(SetRemainedTime)} then {nameof(AddTimeEntry)}
+
+- Call Exit ONLY after all entries are completed
+- NEVER call Exit while an entry is OPEN
+
+# OUTPUT FORMAT
+
+Return ONE JSON object:
+""Function"": string
+""Parameters"": string[]
+
+# RULES
+- Parameters = array of string values only
+- NO parameter names
+- NO objects
+- EXACT keys: ""Function"", ""Parameters""
+- ONE function call per response
+
+# INVALID OUTPUT = FAILURE
 ";
 
     public override AppDescription GetDescription() =>
@@ -50,52 +96,50 @@ Last Unit = ({nameof(SetType)}) -> ({nameof(SetRemainedTime)}) -> ({nameof(AddTi
             new()
             {
                 Name = nameof(SetHours),
-                Description = "Sets the hour value for the entry. Range 0-23.",
-                Parameters = [new() { Name = "hours", Description = "int. Default 0." }],
+                Description = "Set hours for the current entry (0-23). Provide only the value.",
+                Parameters = [new() { Name = "value", Description = "int" }],
             },
             new()
             {
                 Name = nameof(SetMinutes),
-                Description = "Sets the minute value for the entry. Range 0-59.",
-                Parameters = [new() { Name = "minutes", Description = "int. Default 0." }],
+                Description = "Set minutes for the current entry (0-59). Provide only the value.",
+                Parameters = [new() { Name = "value", Description = "int" }],
             },
             new()
             {
                 Name = nameof(SetSeconds),
-                Description = "Sets the second value for the entry. Range 0-59.",
-                Parameters = [new() { Name = "seconds", Description = "int. Default 0." }],
+                Description = "Set seconds for the current entry (0-59). Provide only the value.",
+                Parameters = [new() { Name = "value", Description = "int" }],
             },
             new()
             {
                 Name = nameof(SetType),
-                Description = "Sets the category ('Work' or 'Break') for the entry.",
-                Parameters = [new() { Name = "type", Description = "string. Default Work." }],
+                Description = "Start a new entry. Values: Work or Break.",
+                Parameters = [new() { Name = "value", Description = "string" }],
             },
             new()
             {
                 Name = nameof(SetRemainedTime),
                 Description =
-                    $"Calculates the remaining Work time for the entry. After caling it you still need to save the time to the table.",
+                    "Set remaining work time for the final entry when duration is not specified.",
                 Parameters = [],
             },
             new()
             {
                 Name = nameof(AddTimeEntry),
                 Description =
-                    "Saves the entry to the table. You MUST call this after setting Type/H/M/S and BEFORE starting the next entry. Returns the updated table.",
+                    "Close and save the current entry. Must be called after setting time.",
                 Parameters = [],
             },
             new()
             {
                 Name = "Exit",
-                Description =
-                    "Finalize the session. Call ONLY after every entry has been Written to the table.",
+                Description = "Finish after all entries are completed.",
                 Parameters = [],
             },
         ];
 
-    private TimeEntry[] GetTimeEntriesTable()
-    {
-        return [.. timeCalculator.TimeEntries.Values];
-    }
+    private TimeEntry[] GetTimeEntriesTable() => [.. timeCalculator.TimeEntries.Values];
+
+    private string ReturnTempSuccess() => "Temporarily set";
 }
