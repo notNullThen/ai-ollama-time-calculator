@@ -72,23 +72,11 @@ Repeat this flow for every segment.
 
 - If last segment has no duration → use {nameof(SetRemainedTime)} then {nameof(AddTimeEntry)}
 
-- Call Exit ONLY after all entries are completed
-- NEVER call Exit while an entry is OPEN
-
 # OUTPUT FORMAT
 
 Return ONE JSON object:
 ""Function"": string
 ""Parameters"": string[]
-
-# RULES
-- Parameters = array of string values only
-- NO parameter names
-- NO objects
-- EXACT keys: ""Function"", ""Parameters""
-- ONE function call per response
-
-# INVALID OUTPUT = FAILURE
 ";
 
     public override AppDescription GetDescription() =>
