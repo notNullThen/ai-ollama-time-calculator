@@ -7,9 +7,10 @@ namespace TimeCalculator.AiCore;
 
 public sealed class AiAppFacade(TimeCalculatorProgramm timeCalculator) : AiAppFacadeBase
 {
-    // For demonstration purposes I decided to test the AI's ability to handle
-    // complex logic with multiple function calls.
-    // Otherwise we would have only one function call to set the time entry.
+    // Architecture Note: I intentionally use multiple fine-grained functions
+    // to achieve the goal instead of a lower number of functions.
+    // This demonstrates the AIOrchestrator ability to orchestrate complex logic
+    // and execute multi-step sequences.
 
     public string SetHours(string hours)
     {
