@@ -21,7 +21,7 @@ public class AiInteraction
         Init();
     }
 
-    private const string ModelName = "qwen2.5-coder:7b";
+    private const string ModelName = "gemma4:e2b";
 
     public async Task AskAsync()
     {
@@ -30,7 +30,7 @@ public class AiInteraction
 
     public string GetContext() => AiManager!.ContextHandler.GetContextJson();
 
-    public string GetConstraints() => _aiFacade.GetConstraints();
+    public string GetManagementPrompt() => AiManager!.GetManagementPrompt();
 
     public void Init()
     {
