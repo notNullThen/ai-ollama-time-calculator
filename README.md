@@ -16,6 +16,10 @@ The web application processes human input and fills the time data.
 
 [AIOrchestrator](https://github.com/notNullThen/AIOrchestratorDotNET) has access to `SetHours(int)`, `SetMinutes(int)`, `SetSeconds(int)`, `SetType(Work/Break)`, `SetRemainedTime()` and `AddTimeEntry()` methods.
 
+## Prerequisites
+
+Before running the application, ensure you have the [AIOrchestrator NuGet package](https://github.com/notNullThen/AIOrchestratorDotNET) built and available in your **Local Feed**.
+
 ## AI Assistant Setup
 
 The AI features are powered by [Ollama](https://ollama.com/). By default, it expects the `gemma4:e2b` model.
