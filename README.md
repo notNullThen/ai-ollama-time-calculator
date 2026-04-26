@@ -4,7 +4,7 @@
 
 ### A basic concept of Time Data Management application with **AI assistance** functionality built with **.NET 10** and **Blazor**.
 
-Runs on Ollama - gemma4:e2b.
+Runs on Ollama - gemma4:e4b.
 
 ### Uses own developed [AIOrchestrator NuGet package](https://www.nuget.org/packages/AIOrchestrator).
 
@@ -18,12 +18,12 @@ The web application processes human input and fills the time data.
 
 ## AI Assistant Setup
 
-The AI features are powered by [Ollama](https://ollama.com/). By default, it expects the `gemma4:e2b` model.
+The AI features are powered by [Ollama](https://ollama.com/). By default, it expects the `gemma4:e4b` model.
 
 1.  **Install Ollama:** Follow instructions at [ollama.com](https://ollama.com/).
 2.  **Pull the model:**
     ```bash
-    ollama pull gemma4:e2b
+    ollama pull gemma4:e4b
     ```
 3.  **Run the application**
 

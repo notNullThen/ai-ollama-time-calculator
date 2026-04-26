@@ -21,7 +21,7 @@ public class AiInteraction
         Init();
     }
 
-    private const string ModelName = "gemma4:e2b";
+    private const string ModelName = "gemma4:e4b";
 
     public async Task AskAsync()
     {
