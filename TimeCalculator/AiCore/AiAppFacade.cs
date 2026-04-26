@@ -42,10 +42,10 @@ public sealed class AiAppFacade(TimeCalculatorProgramm timeCalculator) : AiAppFa
         return GetTimeEntriesTable();
     }
 
-    public TimeEntry[] SetRemainedTime()
+    public string SetRemainedTime()
     {
         timeCalculator.SetRemainedTime();
-        return AddTimeEntry();
+        return ReturnTempSuccess();
     }
 
     public override string GetConstraints() =>
