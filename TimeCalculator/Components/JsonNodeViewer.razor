@@ -1,0 +1,215 @@
+@using System.Text.Json
+@using System.Text.Json.Nodes
+
+@if (Node is JsonObject jsonObj)
+{
+    var properties = jsonObj.AsObject().ToList();
+    <div class="json-object d-flex flex-column" style="width: 100%;">
+        <div>
+            @if (properties.Count > 0)
+            {
+                <span class="user-select-none" style="cursor: pointer; color: var(--bs-secondary); display: inline-block; width: 15px;" @onclick="Toggle">
+                    @(IsExpanded ? "▼" : "▶")
+                </span>
+            }
+            else
+            {
+                <span style="display: inline-block; width: 15px;"></span>
+            }
+            
+            @if (PropertyName != null)
+            {
+                if (IsArrayIndex)
+                {
+                    <span style="color: var(--bs-secondary); margin-right: 5px;">@PropertyName:</span>
+                }
+                else
+                {
+                    <span style="color: #0dcaf0; margin-right: 5px;">"@PropertyName":</span>
+                }
+            }
+            
+            @if (properties.Count == 0)
+            {
+                <span>{}</span>
+            }
+            else
+            {
+                <span>{</span>
+                @if (!IsExpanded)
+                {
+                    <span style="color: var(--bs-secondary); font-style: italic; cursor: pointer;" @onclick="Toggle"> @properties.Count properties ...}</span>
+                }
+            }
+        </div>
+        
+        @if (properties.Count > 0 && IsExpanded)
+        {
+            <div style="margin-left: 7px; border-left: 1px dashed var(--bs-border-color); padding-left: 8px;">
+                @foreach (var prop in properties)
+                {
+                    <JsonNodeViewer Node="prop.Value" PropertyName="@prop.Key" IsArrayIndex="false" InitialExpandedDepth="InitialExpandedDepth" CurrentDepth="CurrentDepth + 1" />
+                }
+            </div>
+            <div style="margin-left: 15px;">}</div>
+        }
+    </div>
+}
+else if (Node is JsonArray jsonArray)
+{
+    <div class="json-array d-flex flex-column" style="width: 100%;">
+        <div>
+            @if (jsonArray.Count > 0)
+            {
+                <span class="user-select-none" style="cursor: pointer; color: var(--bs-secondary); display: inline-block; width: 15px;" @onclick="Toggle">
+                    @(IsExpanded ? "▼" : "▶")
+                </span>
+            }
+            else
+            {
+                <span style="display: inline-block; width: 15px;"></span>
+            }
+            
+            @if (PropertyName != null)
+            {
+                if (IsArrayIndex)
+                {
+                    <span style="color: var(--bs-secondary); margin-right: 5px;">@PropertyName:</span>
+                }
+                else
+                {
+                    <span style="color: #0dcaf0; margin-right: 5px;">"@PropertyName":</span>
+                }
+            }
+            
+            @if (jsonArray.Count == 0)
+            {
+                <span>[]</span>
+            }
+            else
+            {
+                <span>[</span>
+                @if (!IsExpanded)
+                {
+                    <span style="color: var(--bs-secondary); font-style: italic; cursor: pointer;" @onclick="Toggle"> @jsonArray.Count items ...]</span>
+                }
+            }
+        </div>
+        
+        @if (jsonArray.Count > 0 && IsExpanded)
+        {
+            <div style="margin-left: 7px; border-left: 1px dashed var(--bs-border-color); padding-left: 8px;">
+                @for (int i = 0; i < jsonArray.Count; i++)
+                {
+                    <JsonNodeViewer Node="jsonArray[i]" PropertyName="@i.ToString()" IsArrayIndex="true" InitialExpandedDepth="InitialExpandedDepth" CurrentDepth="CurrentDepth + 1" />
+                }
+            </div>
+            <div style="margin-left: 15px;">]</div>
+        }
+    </div>
+}
+else if (Node is JsonValue jsonValue)
+{
+    <div style="margin-bottom: 2px;">
+        <span style="display: inline-block; width: 15px;"></span>
+        @if (PropertyName != null)
+        {
+            if (IsArrayIndex)
+            {
+                <span style="color: var(--bs-secondary); margin-right: 5px;">@PropertyName:</span>
+            }
+            else
+            {
+                <span style="color: #0dcaf0; margin-right: 5px;">"@PropertyName":</span>
+            }
+        }
+        @{
+            var (isOk, kind, text) = GetValueInfo(jsonValue);
+            if (isOk)
+            {
+                switch (kind)
+                {
+                    case JsonValueKind.String:
+                        <span style="color: #198754; word-break: break-word; white-space: pre-wrap;">"@text"</span>
+                        break;
+                    case JsonValueKind.Number:
+                        <span style="color: #fd7e14;">@text</span>
+                        break;
+                    case JsonValueKind.True:
+                        <span style="color: #ffc107;">true</span>
+                        break;
+                    case JsonValueKind.False:
+                        <span style="color: #ffc107;">false</span>
+                        break;
+                    case JsonValueKind.Null:
+                        <span style="color: #dc3545;">null</span>
+                        break;
+                    default:
+                        <span style="word-break: break-word; white-space: pre-wrap;">@text</span>
+                        break;
+                }
+            }
+            else
+            {
+                <span style="word-break: break-word; white-space: pre-wrap;">@text</span>
+            }
+        }
+    </div>
+}
+else
+{
+    <div style="margin-bottom: 2px;">
+        <span style="display: inline-block; width: 15px;"></span>
+        @if (PropertyName != null)
+        {
+            if (IsArrayIndex)
+            {
+                <span style="color: var(--bs-secondary); margin-right: 5px;">@PropertyName:</span>
+            }
+            else
+            {
+                <span style="color: #0dcaf0; margin-right: 5px;">"@PropertyName":</span>
+            }
+        }
+        <span style="color: #dc3545;">null</span>
+    </div>
+}
+
+@code {
+    [Parameter] public JsonNode? Node { get; set; }
+    [Parameter] public string? PropertyName { get; set; }
+    [Parameter] public bool IsArrayIndex { get; set; } = false;
+    [Parameter] public int InitialExpandedDepth { get; set; } = 3;
+    [Parameter] public int CurrentDepth { get; set; } = 0;
+
+    private bool IsExpanded { get; set; }
+
+    protected override void OnInitialized()
+    {
+        IsExpanded = CurrentDepth < InitialExpandedDepth;
+    }
+
+    private void Toggle()
+    {
+        IsExpanded = !IsExpanded;
+    }
+
+    private (bool isOk, JsonValueKind kind, string text) GetValueInfo(JsonValue val)
+    {
+        try
+        {
+            var elem = val.GetValue<JsonElement>();
+            string text = elem.ValueKind switch
+            {
+                JsonValueKind.String => elem.GetString() ?? "",
+                JsonValueKind.Number => elem.GetRawText(),
+                _ => elem.ToString()
+            };
+            return (true, elem.ValueKind, text);
+        }
+        catch
+        {
+            return (false, JsonValueKind.Undefined, val.ToString());
+        }
+    }
+}

@@ -47,3 +47,66 @@ window.copyToClipboard = function (elementId, btn) {
         document.body.removeChild(textarea);
     }
 };
+
+/**
+ * Sets up auto-scrolling for a container, disabling it on manual scroll and enabling via button.
+ */
+window.setupAutoScroll = function(containerId, buttonId) {
+    const container = document.getElementById(containerId);
+    const button = document.getElementById(buttonId);
+    if (!container || !button) return;
+
+    // Prevent attaching multiple observers
+    if (container.dataset.autoScrollInitialized) return;
+    container.dataset.autoScrollInitialized = "true";
+
+    let isAutoScrollEnabled = true;
+
+    const updateButtonState = () => {
+        if (isAutoScrollEnabled) {
+            button.classList.add('btn-primary');
+            button.classList.remove('btn-outline-primary');
+            button.innerHTML = 'Auto-scroll: ON';
+        } else {
+            button.classList.remove('btn-primary');
+            button.classList.add('btn-outline-primary');
+            button.innerHTML = 'Auto-scroll: OFF';
+        }
+    };
+
+    button.addEventListener('click', () => {
+        isAutoScrollEnabled = true;
+        container.scrollTop = container.scrollHeight;
+        updateButtonState();
+    });
+
+    let lastScrollTop = container.scrollTop;
+
+    container.addEventListener('scroll', () => {
+        // Only disable if user scrolled UP
+        if (container.scrollTop < lastScrollTop) {
+            const isAtBottom = container.scrollHeight - container.scrollTop <= container.clientHeight + 10;
+            if (!isAtBottom && isAutoScrollEnabled) {
+                isAutoScrollEnabled = false;
+                updateButtonState();
+            }
+        }
+        lastScrollTop = container.scrollTop;
+    });
+
+    // Observer to scroll to bottom when content changes
+    const observer = new MutationObserver(() => {
+        if (isAutoScrollEnabled) {
+            container.scrollTop = container.scrollHeight;
+            lastScrollTop = container.scrollTop;
+        }
+    });
+    observer.observe(container, { childList: true, subtree: true, characterData: true });
+
+    // Initial state
+    updateButtonState();
+    if (isAutoScrollEnabled) {
+        container.scrollTop = container.scrollHeight;
+        lastScrollTop = container.scrollTop;
+    }
+};

@@ -1,0 +1,81 @@
+@using System.Text.Json
+@using System.Text.Json.Nodes
+
+<div class="json-viewer" style="font-family: monospace; font-size: 0.85rem; background-color: transparent;">
+    @if (ParsedJson != null)
+    {
+        <div class="d-flex flex-wrap align-items-center gap-2 mb-2 pb-2" style="border-bottom: 1px dashed var(--bs-border-color);">
+            <button class="btn btn-sm btn-outline-secondary py-0 px-2" style="font-size: 0.75rem;" @onclick="ExpandAll">Expand All</button>
+            <button class="btn btn-sm btn-outline-secondary py-0 px-2" style="font-size: 0.75rem;" @onclick="CollapseAll">Collapse All</button>
+            
+            <div class="d-flex align-items-center gap-1 ms-auto">
+                <span style="font-size: 0.75rem; color: var(--bs-secondary); white-space: nowrap;">Depth:</span>
+                <input type="number" min="0" max="99" class="form-control form-control-sm py-0 px-1" style="width: 45px; font-size: 0.75rem; height: 22px;" @bind="_inputDepth" />
+                <button class="btn btn-sm btn-outline-primary py-0 px-2" style="font-size: 0.75rem;" @onclick="ApplyDepth">Apply</button>
+            </div>
+        </div>
+        <JsonNodeViewer @key="_viewerKey" Node="ParsedJson" InitialExpandedDepth="_currentDepth" CurrentDepth="0" />
+    }
+    else
+    {
+        <div style="white-space: pre-wrap; font-family: monospace; font-size: 0.8rem; padding: 5px; color: var(--tc-fg);">
+            @JsonString
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public string JsonString { get; set; } = string.Empty;
+    [Parameter] public int InitialExpandedDepth { get; set; } = 3;
+
+    private JsonNode? ParsedJson;
+    private Guid _viewerKey = Guid.NewGuid();
+    private int _currentDepth;
+    private int _inputDepth;
+
+    protected override void OnInitialized()
+    {
+        _currentDepth = InitialExpandedDepth;
+        _inputDepth = InitialExpandedDepth;
+    }
+
+    protected override void OnParametersSet()
+    {
+        try
+        {
+            if (!string.IsNullOrWhiteSpace(JsonString))
+            {
+                // Fix issue when string contains consecutive json elements separated by newline, which often happens in logs
+                // Or just parse normally. If it fails, ParsedJson = null.
+                ParsedJson = JsonNode.Parse(JsonString);
+            }
+            else
+            {
+                ParsedJson = null;
+            }
+        }
+        catch
+        {
+            ParsedJson = null; // fallback to raw string if invalid
+        }
+    }
+
+    private void ExpandAll()
+    {
+        _currentDepth = 999;
+        _viewerKey = Guid.NewGuid();
+    }
+
+    private void CollapseAll()
+    {
+        _currentDepth = 1; // Leaves the root expanded but collapses immediate children
+        _viewerKey = Guid.NewGuid();
+    }
+
+    private void ApplyDepth()
+    {
+        if (_inputDepth < 0) _inputDepth = 0;
+        _currentDepth = _inputDepth;
+        _viewerKey = Guid.NewGuid();
+    }
+}
