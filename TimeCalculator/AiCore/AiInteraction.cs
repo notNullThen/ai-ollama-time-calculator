@@ -42,7 +42,7 @@ public class AiInteraction
         AiManager = new(
             modelName: ModelName,
             appInstance: _aiFacade,
-            options: new() { Temperature = 0.7f }
+            options: new() { Temperature = 0.0f }
         );
         AiManager.ContextHandler.OnContextUpdated += InternalOnContextUpdated;
         UserInput = string.Empty;
