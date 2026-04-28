@@ -52,32 +52,17 @@ public sealed class AiAppFacade(TimeCalculatorProgramm timeCalculator) : AiAppFa
         @$"
 # CORE RULE
 Process the user request as a sequence of entries.
-Each entry MUST be completed before the next begins.
+Each entry MUST be completed by calling {nameof(AddTimeEntry)} before the next begins.
 
 # ENTRY FLOW
 Each entry follows:
 ({nameof(SetType)}) → (set time OR {nameof(SetRemainedTime)}) → ({nameof(AddTimeEntry)})
 
-Repeat this flow for every segment.
-
 # STRICT RULES
-
-- After {nameof(SetType)} the entry is OPEN
-- An OPEN entry MUST be closed with {nameof(AddTimeEntry)}
-- NEVER call {nameof(SetType)} before closing the previous entry
-- {nameof(SetType)} is ONLY allowed after {nameof(AddTimeEntry)}
-
-- One segment = one entry
-- DO NOT merge or skip segments
-- DO NOT change an entry once started
-
-- If last segment has no duration → use {nameof(SetRemainedTime)} then {nameof(AddTimeEntry)}
-
-# OUTPUT FORMAT
-
-Return ONE JSON object:
-""Function"": string
-""Parameters"": string[]
+1. You MUST close an open entry with {nameof(AddTimeEntry)}.
+2. You MUST NOT call {nameof(SetType)} before closing the previous entry.
+3. You MUST treat one segment as one entry.
+4. You MUST use {nameof(SetRemainedTime)} then {nameof(AddTimeEntry)} if the last segment has no duration.
 ";
 
     public override AppDescription GetDescription() =>
@@ -117,7 +102,7 @@ Return ONE JSON object:
             {
                 Name = nameof(AddTimeEntry),
                 Description =
-                    "Close and save the current entry. Must be called after setting time.",
+                    "Close and save the current entry. Must be called after setting time. Returns the updated time table.",
                 Parameters = [],
             },
             new()
