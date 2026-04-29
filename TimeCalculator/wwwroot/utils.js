@@ -7,7 +7,7 @@ window.copyToClipboard = function (elementId, btn) {
     const element = document.getElementById(elementId);
     if (!element) return;
 
-    const text = element.innerText;
+    const text = element.textContent;
     const originalText = btn.innerText;
 
     const showFeedback = () => {
