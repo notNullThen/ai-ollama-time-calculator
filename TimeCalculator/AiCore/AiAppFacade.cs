@@ -56,7 +56,7 @@ Each entry MUST be completed by calling {nameof(AddTimeEntry)} before the next b
 
 # ENTRY FLOW
 Each entry follows:
-({nameof(SetType)}) → (set time OR {nameof(SetRemainedTime)}) → (optionally {nameof(SetDescription)}) → ({nameof(AddTimeEntry)})
+({nameof(SetType)}) → (set time OR {nameof(SetRemainedTime)}) → ({nameof(SetDescription)}) → ({nameof(AddTimeEntry)})
 
 # STRICT RULES
 1. You MUST close an open entry with {nameof(AddTimeEntry)}.
@@ -95,7 +95,7 @@ Each entry follows:
             {
                 Name = nameof(SetDescription),
                 Description =
-                    "Set an optional short description for the current entry (e.g. 'lunch', 'morning shift'). Call before AddTimeEntry.",
+                    "Set short description for the current entry - use all additional information except time and type here, rewrite it and make it professional looking and use it this function.",
                 Parameters = [new() { Name = "value", Description = "string" }],
             },
             new()
