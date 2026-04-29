@@ -12,28 +12,29 @@ public sealed class AiAppFacade(TimeCalculatorProgramm timeCalculator) : AiAppFa
     // This demonstrates the AIOrchestrator ability to orchestrate complex logic
     // and execute multi-step sequences.
 
-    public string SetHours(string hours)
+    public void SetHours(string hours)
     {
         timeCalculator.SetHours(int.Parse(hours));
-        return ReturnTempSuccess();
     }
 
-    public string SetMinutes(string minutes)
+    public void SetMinutes(string minutes)
     {
         timeCalculator.SetMinutes(int.Parse(minutes));
-        return ReturnTempSuccess();
     }
 
-    public string SetSeconds(string seconds)
+    public void SetSeconds(string seconds)
     {
         timeCalculator.SetSeconds(int.Parse(seconds));
-        return ReturnTempSuccess();
     }
 
-    public string SetType(string type)
+    public void SetType(string type)
     {
         timeCalculator.SetType(Enum.Parse<TimeType>(type));
-        return ReturnTempSuccess();
+    }
+
+    public void SetDescription(string description)
+    {
+        timeCalculator.SetDescription(description);
     }
 
     public TimeEntry[] AddTimeEntry()
@@ -42,10 +43,9 @@ public sealed class AiAppFacade(TimeCalculatorProgramm timeCalculator) : AiAppFa
         return GetTimeEntriesTable();
     }
 
-    public string SetRemainedTime()
+    public void SetRemainedTime()
     {
         timeCalculator.SetRemainedTime();
-        return ReturnTempSuccess();
     }
 
     public override string GetConstraints() =>
@@ -56,7 +56,7 @@ Each entry MUST be completed by calling {nameof(AddTimeEntry)} before the next b
 
 # ENTRY FLOW
 Each entry follows:
-({nameof(SetType)}) → (set time OR {nameof(SetRemainedTime)}) → ({nameof(AddTimeEntry)})
+({nameof(SetType)}) → (set time OR {nameof(SetRemainedTime)}) → (optionally {nameof(SetDescription)}) → ({nameof(AddTimeEntry)})
 
 # STRICT RULES
 1. You MUST close an open entry with {nameof(AddTimeEntry)}.
@@ -93,6 +93,13 @@ Each entry follows:
             },
             new()
             {
+                Name = nameof(SetDescription),
+                Description =
+                    "Set an optional short description for the current entry (e.g. 'lunch', 'morning shift'). Call before AddTimeEntry.",
+                Parameters = [new() { Name = "value", Description = "string" }],
+            },
+            new()
+            {
                 Name = nameof(SetRemainedTime),
                 Description =
                     "Set remaining work time for the final entry when duration is not specified.",
@@ -114,6 +121,4 @@ Each entry follows:
         ];
 
     private TimeEntry[] GetTimeEntriesTable() => [.. timeCalculator.TimeEntries.Values];
-
-    private string ReturnTempSuccess() => "Temporarily set";
 }

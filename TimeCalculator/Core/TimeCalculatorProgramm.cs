@@ -45,6 +45,11 @@ public class TimeCalculatorProgramm
         CurrentTimeEntry.Time.Seconds = seconds;
     }
 
+    public void SetDescription(string description)
+    {
+        CurrentTimeEntry.Description = description;
+    }
+
     public void AddTimeEntry()
     {
         TimeEntries.Add(Guid.NewGuid(), CurrentTimeEntry);
