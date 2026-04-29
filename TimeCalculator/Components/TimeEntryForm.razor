@@ -42,6 +42,13 @@
             </div>
         </div>
 
+        <!-- Description Input -->
+        <div class="d-flex flex-column">
+            <label class="form-label mb-1">Description</label>
+            <input type="text" @bind="TimeCalculator.CurrentTimeEntry.Description"
+                   class="form-control" placeholder="Optional description…" />
+        </div>
+
         <!-- Action Buttons -->
         <div class="d-flex gap-2">
             <button class="btn btn-primary" @onclick="AddTimeEntry">Add Entry</button>

@@ -55,7 +55,7 @@ public class TimeCalculatorProgramm
 
     public void SetRemainedTime()
     {
-        CurrentTimeEntry = new() { Time = TotalTimeLeftToWork.NegativeClone() };
+        CurrentTimeEntry = new() { Time = TotalTimeLeftToWork.NegativeClone(), Type = CurrentTimeEntry.Type, Description = CurrentTimeEntry.Description };
     }
 
     public void CalculateTotalTime()
