@@ -42,15 +42,13 @@ public class TimeCalculatorProgramm
         CurrentTimeEntry.Time += TimeSpan.FromHours(hours);
     }
 
-    public void SetMinutes(int minutes)
-    {
-        CurrentTimeEntry.Time += TimeSpan.FromMinutes(minutes);
-    }
+    public void SetMinutes(int minutes) => CurrentTimeEntry.Time += TimeSpan.FromMinutes(minutes);
 
-    public void SetDescription(string description)
-    {
-        CurrentTimeEntry.Description = description;
-    }
+    public void SetRelativeHours(int hours) => RelativeHours = hours;
+
+    public void SetRelativeMinutes(int minutes) => RelativeMinutes = minutes;
+
+    public void SetDescription(string description) => CurrentTimeEntry.Description = description;
 
     public void AddTimeEntry()
     {

@@ -15,7 +15,7 @@
                     <div class="d-flex flex-column">
                         <label class="form-label mb-1">Hours</label>
                         <input type="text" value="@TimeCalculator.CurrentTimeEntry.Hours.ToString("00")"
-                               @onchange="@(e => TimeCalculator.CurrentTimeEntry.Hours = Math.Min(23, ParseInt(e.Value)))"
+                               @onchange="@(e => TimeCalculator.SetHours(ParseHours(e.Value)))"
                                class="form-control text-center px-1" style="width: 50px;"
                                maxlength="2" inputmode="numeric" onfocus="this.select()" />
                     </div>
@@ -25,7 +25,7 @@
                     <div class="d-flex flex-column">
                         <label class="form-label mb-1">Minutes</label>
                         <input type="text" value="@TimeCalculator.CurrentTimeEntry.Minutes.ToString("00")"
-                               @onchange="@(e => TimeCalculator.CurrentTimeEntry.Minutes = Math.Min(59, ParseInt(e.Value)))"
+                               @onchange="@(e => TimeCalculator.SetMinutes(ParseMinutes(e.Value)))"
                                class="form-control text-center px-1" style="width: 50px;"
                                maxlength="2" inputmode="numeric" onfocus="this.select()" />
                     </div>
@@ -36,14 +36,14 @@
                     <label class="form-label mb-1 small text-muted">Start in</label>
                     <div class="d-flex gap-2 align-items-center">
                         <input type="text" value="@TimeCalculator.RelativeHours.ToString("00")"
-                               @onchange="@(e => TimeCalculator.RelativeHours = ParseInt(e.Value))"
+                               @onchange="@(e => TimeCalculator.SetRelativeHours(ParseHours(e.Value)))"
                                class="form-control text-center px-1" style="width: 50px; height: 31px; font-size: 0.875rem;"
                                maxlength="2" inputmode="numeric" onfocus="this.select()" />
 
                         <div class="text-muted fw-bold">:</div>
 
                         <input type="text" value="@TimeCalculator.RelativeMinutes.ToString("00")"
-                               @onchange="@(e => TimeCalculator.RelativeMinutes = ParseInt(e.Value))"
+                               @onchange="@(e => TimeCalculator.SetRelativeMinutes(ParseMinutes(e.Value)))"
                                class="form-control text-center px-1" style="width: 50px; height: 31px; font-size: 0.875rem;"
                                maxlength="2" inputmode="numeric" onfocus="this.select()" />
                     </div>
@@ -196,4 +196,6 @@
     }
 
     private int ParseInt(object? value) => int.TryParse(value?.ToString(), out var v) ? v : 0;
+    private int ParseHours(object? value) => Math.Min(23, ParseInt(value));
+    private int ParseMinutes(object? value) => Math.Min(59, ParseInt(value));
 }
