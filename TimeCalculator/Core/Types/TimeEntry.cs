@@ -24,10 +24,4 @@ public class TimeEntry
         get => Time.Minutes;
         set => Time = new TimeSpan(Time.Hours, value, Time.Seconds);
     }
-
-    public int Seconds
-    {
-        get => Time.Seconds;
-        set => Time = new TimeSpan(Time.Hours, Time.Minutes, value);
-    }
 }

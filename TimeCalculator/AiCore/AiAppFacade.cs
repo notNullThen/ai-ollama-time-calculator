@@ -22,11 +22,6 @@ public sealed class AiAppFacade(TimeCalculatorProgramm timeCalculator) : AiAppFa
         timeCalculator.SetMinutes(int.Parse(minutes));
     }
 
-    public void SetSeconds(string seconds)
-    {
-        timeCalculator.SetSeconds(int.Parse(seconds));
-    }
-
     public void SetType(string type)
     {
         timeCalculator.SetType(Enum.Parse<TimeType>(type));
@@ -77,12 +72,6 @@ Each entry follows:
             {
                 Name = nameof(SetMinutes),
                 Description = "Set minutes for the current entry (0-59). Provide only the value.",
-                Parameters = [new() { Name = "value", Description = "int" }],
-            },
-            new()
-            {
-                Name = nameof(SetSeconds),
-                Description = "Set seconds for the current entry (0-59). Provide only the value.",
                 Parameters = [new() { Name = "value", Description = "int" }],
             },
             new()

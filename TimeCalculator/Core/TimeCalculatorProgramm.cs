@@ -45,11 +45,6 @@ public class TimeCalculatorProgramm
         CurrentTimeEntry.Time += TimeSpan.FromMinutes(minutes);
     }
 
-    public void SetSeconds(int seconds)
-    {
-        CurrentTimeEntry.Time += TimeSpan.FromSeconds(seconds);
-    }
-
     public void SetDescription(string description)
     {
         CurrentTimeEntry.Description = description;

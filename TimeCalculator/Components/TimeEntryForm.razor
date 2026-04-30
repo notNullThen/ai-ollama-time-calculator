@@ -21,12 +21,6 @@
                        class="form-control" style="width: 80px;" />
             </div>
 
-            <div class="d-flex flex-column">
-                <label class="form-label mb-1">Seconds</label>
-                <input type="number" @bind="TimeCalculator.CurrentTimeEntry.Seconds" min="0" max="59"
-                       class="form-control" style="width: 80px;" />
-            </div>
-
             <div class="ms-auto">
                 <div class="btn-group" role="group" aria-label="Time entry type">
                     <button type="button" class="@GetTypeButtonClass(TimeType.Work)"

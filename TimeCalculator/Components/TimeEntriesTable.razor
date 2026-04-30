@@ -5,7 +5,6 @@
             <tr>
                 <th scope="col">Hours</th>
                 <th scope="col">Minutes</th>
-                <th scope="col">Seconds</th>
                 <th scope="col">Formatted</th>
                 <th scope="col">Type</th>
                 <th scope="col">Description</th>
@@ -20,7 +19,6 @@
                 <tr @key="entry.Id" class="@(isZeroTime ? "tc-zero-time-row" : null)">
                     <td class="@(isZeroTime ? "text-muted" : null)">@entry.Time.Hours</td>
                     <td class="@(isZeroTime ? "text-muted" : null)">@entry.Time.Minutes</td>
-                    <td class="@(isZeroTime ? "text-muted" : null)">@entry.Time.Seconds</td>
                     <td class="@(isZeroTime ? "text-muted" : null)">@entry.Time.ToFormattedString()</td>
                     <td class="@(isZeroTime ? "text-muted" : null)">@entry.Type</td>
                     <td class="@(isZeroTime ? "text-muted" : null)">@entry.Description</td>
