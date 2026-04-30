@@ -1,4 +1,4 @@
-﻿@page "/"
+@page "/"
 @using TimeCalculator.Core
 @using TimeCalculator.Core.Types
 
@@ -74,7 +74,7 @@
     private void SetDailyWorkTime()
     {
         _isDailyWorkTimeInputVisible = false;
-        timeCalculator.CalculateTotalTime();
+        timeCalculator.CalculateTime();
     }
 
     private void ShowDailyWorkTimeInput()

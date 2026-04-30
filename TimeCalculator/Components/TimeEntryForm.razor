@@ -7,27 +7,50 @@
 <div class="d-flex flex-column flex-lg-row gap-4 align-items-start">
     <!-- Main Form Controls -->
     <div class="d-flex flex-column gap-4" style="width: 100%; max-width: 400px;">
-        <!-- Time Inputs -->
-        <div class="d-flex gap-2 align-items-end">
-            <div class="d-flex flex-column">
-                <label class="form-label mb-1">Hours</label>
-                <input type="text" value="@TimeCalculator.CurrentTimeEntry.Hours.ToString("00")"
-                       @onchange="@(e => TimeCalculator.CurrentTimeEntry.Hours = Math.Min(23, int.TryParse(e.Value?.ToString(), out var v) ? v : 0))"
-                       class="form-control text-center px-1" style="width: 50px;"
-                       maxlength="2" inputmode="numeric" onfocus="this.select()" />
+        <!-- Time Inputs Section -->
+        <div class="d-flex gap-3 align-items-start">
+            <div class="d-flex flex-column gap-2">
+                <!-- Absolute Time -->
+                <div class="d-flex gap-2 align-items-end">
+                    <div class="d-flex flex-column">
+                        <label class="form-label mb-1">Hours</label>
+                        <input type="text" value="@TimeCalculator.CurrentTimeEntry.Hours.ToString("00")"
+                               @onchange="@(e => TimeCalculator.CurrentTimeEntry.Hours = Math.Min(23, ParseInt(e.Value)))"
+                               class="form-control text-center px-1" style="width: 50px;"
+                               maxlength="2" inputmode="numeric" onfocus="this.select()" />
+                    </div>
+
+                    <div class="mb-2 text-muted fw-bold">:</div>
+
+                    <div class="d-flex flex-column">
+                        <label class="form-label mb-1">Minutes</label>
+                        <input type="text" value="@TimeCalculator.CurrentTimeEntry.Minutes.ToString("00")"
+                               @onchange="@(e => TimeCalculator.CurrentTimeEntry.Minutes = Math.Min(59, ParseInt(e.Value)))"
+                               class="form-control text-center px-1" style="width: 50px;"
+                               maxlength="2" inputmode="numeric" onfocus="this.select()" />
+                    </div>
+                </div>
+
+                <!-- Relative Time (Start In) -->
+                <div class="d-flex flex-column">
+                    <label class="form-label mb-1 small text-muted">Start in</label>
+                    <div class="d-flex gap-2 align-items-center">
+                        <input type="text" value="@TimeCalculator.RelativeHours.ToString("00")"
+                               @onchange="@(e => TimeCalculator.RelativeHours = ParseInt(e.Value))"
+                               class="form-control text-center px-1" style="width: 50px; height: 31px; font-size: 0.875rem;"
+                               maxlength="2" inputmode="numeric" onfocus="this.select()" />
+
+                        <div class="text-muted fw-bold">:</div>
+
+                        <input type="text" value="@TimeCalculator.RelativeMinutes.ToString("00")"
+                               @onchange="@(e => TimeCalculator.RelativeMinutes = ParseInt(e.Value))"
+                               class="form-control text-center px-1" style="width: 50px; height: 31px; font-size: 0.875rem;"
+                               maxlength="2" inputmode="numeric" onfocus="this.select()" />
+                    </div>
+                </div>
             </div>
 
-            <div class="mb-2 text-muted fw-bold">:</div>
-
-            <div class="d-flex flex-column">
-                <label class="form-label mb-1">Minutes</label>
-                <input type="text" value="@TimeCalculator.CurrentTimeEntry.Minutes.ToString("00")"
-                       @onchange="@(e => TimeCalculator.CurrentTimeEntry.Minutes = Math.Min(59, int.TryParse(e.Value?.ToString(), out var v) ? v : 0))"
-                       class="form-control text-center px-1" style="width: 50px;"
-                       maxlength="2" inputmode="numeric" onfocus="this.select()" />
-            </div>
-
-            <div class="ms-auto">
+            <div class="ms-auto pt-4">
                 <div class="btn-group" role="group" aria-label="Time entry type">
                     <button type="button" class="@GetTypeButtonClass(TimeType.Work)"
                             aria-pressed="@(IsTypeSelected(TimeType.Work))"
@@ -172,4 +195,5 @@
         return IsTypeSelected(type) ? "btn btn-primary" : "btn btn-outline-primary";
     }
 
+    private int ParseInt(object? value) => int.TryParse(value?.ToString(), out var v) ? v : 0;
 }
