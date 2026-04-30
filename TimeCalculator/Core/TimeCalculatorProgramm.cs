@@ -39,10 +39,10 @@ public class TimeCalculatorProgramm
 
     public void SetHours(int hours)
     {
-        CurrentTimeEntry.Time += TimeSpan.FromHours(hours);
+        CurrentTimeEntry.Hours = hours;
     }
 
-    public void SetMinutes(int minutes) => CurrentTimeEntry.Time += TimeSpan.FromMinutes(minutes);
+    public void SetMinutes(int minutes) => CurrentTimeEntry.Minutes = minutes;
 
     public void SetRelativeHours(int hours) => RelativeHours = hours;
 
