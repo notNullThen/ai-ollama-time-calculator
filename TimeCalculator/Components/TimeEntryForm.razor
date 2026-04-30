@@ -12,25 +12,26 @@
             <div class="d-flex flex-column">
                 <label class="form-label mb-1">Hours</label>
                 <input type="number" @bind="TimeCalculator.CurrentTimeEntry.Time.Hours" min="0" class="form-control"
-                       style="width: 80px;"/>
+                       style="width: 80px;" />
             </div>
 
             <div class="d-flex flex-column">
                 <label class="form-label mb-1">Minutes</label>
                 <input type="number" @bind="TimeCalculator.CurrentTimeEntry.Time.Minutes" min="0" max="59"
-                       class="form-control" style="width: 80px;"/>
+                       class="form-control" style="width: 80px;" />
             </div>
 
             <div class="d-flex flex-column">
                 <label class="form-label mb-1">Seconds</label>
                 <input type="number" @bind="TimeCalculator.CurrentTimeEntry.Time.Seconds" min="0" max="59"
-                       class="form-control" style="width: 80px;"/>
+                       class="form-control" style="width: 80px;" />
             </div>
 
             <div class="ms-auto">
                 <div class="btn-group" role="group" aria-label="Time entry type">
                     <button type="button" class="@GetTypeButtonClass(TimeType.Work)"
-                            aria-pressed="@(IsTypeSelected(TimeType.Work))" @onclick="() => TimeCalculator.SetType(TimeType.Work)">
+                            aria-pressed="@(IsTypeSelected(TimeType.Work))"
+                            @onclick="() => TimeCalculator.SetType(TimeType.Work)">
                         Work
                     </button>
                     <button type="button" class="@GetTypeButtonClass(TimeType.Break)"
@@ -45,8 +46,8 @@
         <!-- Description Input -->
         <div class="d-flex flex-column">
             <label class="form-label mb-1">Description</label>
-            <input type="text" @bind="TimeCalculator.CurrentTimeEntry.Description"
-                   class="form-control" placeholder="Optional description…" />
+            <input type="text" @bind="TimeCalculator.CurrentTimeEntry.Description" class="form-control"
+                   placeholder="Optional description…" />
         </div>
 
         <!-- Action Buttons -->
@@ -55,13 +56,13 @@
             <button class="btn btn-outline-primary" @onclick="SetRemainedTime">Remained</button>
         </div>
 
-        <hr class="my-0 opacity-10"/>
+        <hr class="my-0 opacity-10" />
 
         <!-- AI Assistant Group (Explain + Type nearby) -->
         <div class="d-flex flex-column gap-2">
             <label class="form-label mb-1">Explain it - we'll try to do it!</label>
-            <textarea @bind="AiInteraction.UserInput"
-                   class="form-control" style="height: 120px;" placeholder="e.g., 'add 2 hours of work'"></textarea>
+            <textarea @bind="AiInteraction.UserInput" class="form-control" style="height: 120px;"
+                      placeholder="e.g., 'add 2 hours of work'"></textarea>
             <button class="btn btn-primary w-100" @onclick="AiInteraction.AskAsync">Do it!</button>
         </div>
     </div>
@@ -72,17 +73,19 @@
             <label class="form-label mb-0">AI Debug Details</label>
             <div>
                 <button id="btn-autoscroll-debug" class="btn btn-primary btn-sm me-1">Auto-scroll: ON</button>
-                <button class="btn btn-outline-primary btn-sm"
-                        onclick="window.copyToClipboard('ai-debug-raw', this)">
+                <button class="btn btn-outline-primary btn-sm" onclick="window.copyToClipboard('ai-debug-raw', this)">
                     Copy
                 </button>
             </div>
         </div>
-        <div id="container-debug" class="form-control" style="height: 385px; overflow-y: auto; background-color: var(--tc-surface-2); border-color: var(--tc-border);">
+        <div id="container-debug" class="form-control"
+             style="height: 385px; overflow-y: auto; background-color: var(--tc-surface-2); border-color: var(--tc-border);">
             <div style="padding: 5px; color: var(--tc-fg);">
                 <JsonViewer JsonString="@AiInteraction.GetContext()" InitialExpandedDepth="3" />
             </div>
-            <div id="ai-debug-raw" style="position: absolute; left: -9999px; top: -9999px; opacity: 0; pointer-events: none;" aria-hidden="true">@AiInteraction.GetContext()</div>
+            <div id="ai-debug-raw"
+                 style="position: absolute; left: -9999px; top: -9999px; opacity: 0; pointer-events: none;"
+                 aria-hidden="true">@AiInteraction.GetContext()</div>
         </div>
     </div>
 
@@ -95,11 +98,14 @@
                 Copy
             </button>
         </div>
-        <div class="form-control" style="height: 385px; overflow-y: auto; background-color: var(--tc-surface-2); border-color: var(--tc-border);">
+        <div class="form-control"
+             style="height: 385px; overflow-y: auto; background-color: var(--tc-surface-2); border-color: var(--tc-border);">
             <div style="padding: 5px; color: var(--tc-fg);">
                 <JsonViewer JsonString="@AiInteraction.GetManagementPrompt()" InitialExpandedDepth="3" />
             </div>
-            <div id="ai-management-prompt-raw" style="position: absolute; left: -9999px; top: -9999px; opacity: 0; pointer-events: none;" aria-hidden="true">@AiInteraction.GetManagementPrompt()</div>
+            <div id="ai-management-prompt-raw"
+                 style="position: absolute; left: -9999px; top: -9999px; opacity: 0; pointer-events: none;"
+                 aria-hidden="true">@AiInteraction.GetManagementPrompt()</div>
         </div>
     </div>
 </div>
@@ -116,7 +122,7 @@
         AiInteraction = new AiInteraction(TimeCalculator);
         AiInteraction.OnContextUpdated += OnContextUpdated;
 
-// TODO: Remove after debug finished
+        // TODO: Remove after debug finished
         AiInteraction.UserInput = "I worked for 4 hours 43 mins, then had 54 minutes lunch and after that worked till the end of my working day.";
     }
 
