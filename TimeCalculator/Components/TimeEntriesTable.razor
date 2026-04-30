@@ -15,7 +15,7 @@
         <tbody>
             @foreach (var entry in timeCalculator.TimeEntries)
             {
-                var isZeroTime = entry.Value.Time.IsZero;
+                var isZeroTime = entry.Value.Time.IsZero();
 
                 <tr @key="entry" class="@(isZeroTime ? "tc-zero-time-row" : null)">
                     <td class="@(isZeroTime ? "text-muted" : null)">@entry.Value.Time.Hours</td>

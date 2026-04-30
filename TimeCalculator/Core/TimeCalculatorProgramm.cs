@@ -6,9 +6,9 @@ public class TimeCalculatorProgramm
 {
     public Dictionary<Guid, TimeEntry> TimeEntries = [];
 
-    public TimeData TotalTime = new();
-    public TimeData TotalWorkTime = new();
-    public TimeData TotalTimeLeftToWork => GetTimeLeftToWork();
+    public TimeSpan TotalTime = new();
+    public TimeSpan TotalWorkTime = new();
+    public TimeSpan TotalTimeLeftToWork => GetTimeLeftToWork();
     public TimeEntry CurrentTimeEntry = new();
 
     public int DailyWorkHours = 0;
@@ -20,7 +20,7 @@ public class TimeCalculatorProgramm
 
     public void ReplaceEntryWithCurrent(Guid guid)
     {
-        TimeEntries[guid] = CurrentTimeEntry.Clone();
+        TimeEntries[guid] = CurrentTimeEntry;
         CalculateTotalTime();
     }
 
@@ -32,17 +32,17 @@ public class TimeCalculatorProgramm
 
     public void SetHours(int hours)
     {
-        CurrentTimeEntry.Time.Hours = hours;
+        CurrentTimeEntry.Time += TimeSpan.FromHours(hours);
     }
 
     public void SetMinutes(int minutes)
     {
-        CurrentTimeEntry.Time.Minutes = minutes;
+        CurrentTimeEntry.Time += TimeSpan.FromMinutes(minutes);
     }
 
     public void SetSeconds(int seconds)
     {
-        CurrentTimeEntry.Time.Seconds = seconds;
+        CurrentTimeEntry.Time += TimeSpan.FromSeconds(seconds);
     }
 
     public void SetDescription(string description)
@@ -60,7 +60,12 @@ public class TimeCalculatorProgramm
 
     public void SetRemainedTime()
     {
-        CurrentTimeEntry = new() { Time = TotalTimeLeftToWork.NegativeClone(), Type = CurrentTimeEntry.Type, Description = CurrentTimeEntry.Description };
+        CurrentTimeEntry = new()
+        {
+            Time = -TotalTimeLeftToWork,
+            Type = CurrentTimeEntry.Type,
+            Description = CurrentTimeEntry.Description,
+        };
     }
 
     public void CalculateTotalTime()
@@ -73,16 +78,11 @@ public class TimeCalculatorProgramm
         TotalWorkTime = SumTimeEntries(workTimeEntries);
     }
 
-    private TimeData GetTimeLeftToWork()
-    {
-        var timeLeft = TotalWorkTime.Clone();
-        timeLeft -= new TimeData { Hours = DailyWorkHours };
-        return timeLeft;
-    }
+    private TimeSpan GetTimeLeftToWork() => TotalWorkTime - TimeSpan.FromHours(DailyWorkHours);
 
-    private TimeData SumTimeEntries(Dictionary<Guid, TimeEntry> entries)
+    private TimeSpan SumTimeEntries(Dictionary<Guid, TimeEntry> entries)
     {
-        var totalTime = new TimeData();
+        var totalTime = new TimeSpan();
 
         foreach (var entry in entries)
         {
