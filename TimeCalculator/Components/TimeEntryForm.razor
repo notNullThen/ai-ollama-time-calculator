@@ -74,7 +74,9 @@
         <!-- Description Input -->
         <div class="d-flex flex-column">
             <label class="form-label mb-1">Description</label>
-            <input type="text" @bind="TimeCalculator.CurrentTimeEntry.Description" class="form-control"
+            <input type="text" value="@TimeCalculator.CurrentTimeEntry.Description"
+                   @onchange="@(e => TimeCalculator.SetDescription(ParseString(e.Value)))"
+                   class="form-control"
                    placeholder="Optional description…" />
         </div>
 
@@ -198,4 +200,5 @@
     private int ParseInt(object? value) => int.TryParse(value?.ToString(), out var v) ? v : 0;
     private int ParseHours(object? value) => Math.Min(23, ParseInt(value));
     private int ParseMinutes(object? value) => Math.Min(59, ParseInt(value));
+    private string ParseString(object? value) => value?.ToString() ?? string.Empty;
 }
