@@ -22,6 +22,16 @@ public sealed class AiAppFacade(TimeCalculatorProgramm timeCalculator) : AiAppFa
         timeCalculator.SetMinutes(int.Parse(minutes));
     }
 
+    public void SetRelativeHours(string hours)
+    {
+        timeCalculator.SetRelativeHours(int.Parse(hours));
+    }
+
+    public void SetRelativeMinutes(string minutes)
+    {
+        timeCalculator.SetRelativeMinutes(int.Parse(minutes));
+    }
+
     public void SetType(string type)
     {
         timeCalculator.SetType(Enum.Parse<TimeType>(type));
@@ -51,7 +61,7 @@ Each entry MUST be completed by calling {nameof(AddTimeEntry)} before the next b
 
 # ENTRY FLOW
 Each entry follows:
-({nameof(SetType)}) → (set time OR {nameof(SetRemainedTime)}) → ({nameof(SetDescription)}) → ({nameof(AddTimeEntry)})
+({nameof(SetType)}) → (set time OR set relative time OR {nameof(SetRemainedTime)}) → ({nameof(SetDescription)}) → ({nameof(AddTimeEntry)})
 
 # STRICT RULES
 1. You MUST close an open entry with {nameof(AddTimeEntry)}.
@@ -72,6 +82,18 @@ Each entry follows:
             {
                 Name = nameof(SetMinutes),
                 Description = "Set minutes for the current entry (0-59). Provide only the value.",
+                Parameters = [new() { Name = "value", Description = "int" }],
+            },
+            new()
+            {
+                Name = nameof(SetRelativeHours),
+                Description = "Set relative hours from the previous entry.",
+                Parameters = [new() { Name = "value", Description = "int" }],
+            },
+            new()
+            {
+                Name = nameof(SetRelativeMinutes),
+                Description = "Set relative minutes from the previous entry.",
                 Parameters = [new() { Name = "value", Description = "int" }],
             },
             new()
