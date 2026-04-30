@@ -13,6 +13,8 @@ public class TimeEntry
     [JsonPropertyName("description")]
     public string Description { get; set; } = string.Empty;
 
+    public TimeSpan Duration { get; set; } = new();
+
     public int Hours
     {
         get => Time.Hours;

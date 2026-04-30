@@ -6,6 +6,7 @@
                 <th scope="col">Hours</th>
                 <th scope="col">Minutes</th>
                 <th scope="col">Formatted</th>
+                <th scope="col">Duration</th>
                 <th scope="col">Type</th>
                 <th scope="col">Description</th>
                 <th scope="col" class="text-end">Actions</th>
@@ -20,6 +21,7 @@
                     <td class="@(isZeroTime ? "text-muted" : null)">@entry.Time.Hours</td>
                     <td class="@(isZeroTime ? "text-muted" : null)">@entry.Time.Minutes</td>
                     <td class="@(isZeroTime ? "text-muted" : null)">@entry.Time.ToFormattedString()</td>
+                    <td class="@(isZeroTime ? "text-muted" : null)">@entry.Duration.ToFormattedString()</td>
                     <td class="@(isZeroTime ? "text-muted" : null)">@entry.Type</td>
                     <td class="@(isZeroTime ? "text-muted" : null)">@entry.Description</td>
                     <td class="text-end">

@@ -4,4 +4,5 @@ public enum TimeType
 {
     Work,
     Break,
+    DayEnd,
 }

@@ -61,35 +61,43 @@ public class TimeCalculatorProgramm
 
     public void SetRemainedTime()
     {
+        var lastEntryTime = TimeEntries.Count > 0 ? TimeEntries.Last().Time : new TimeSpan();
+
         CurrentTimeEntry = new()
         {
-            Time = -TotalTimeLeftToWork,
-            Type = CurrentTimeEntry.Type,
+            Time = lastEntryTime - TotalTimeLeftToWork,
+            Type = TimeType.DayEnd,
             Description = CurrentTimeEntry.Description,
         };
     }
 
     public void CalculateTotalTime()
     {
-        var workTimeEntries = TimeEntries
-            .Where(timeEntry => timeEntry.Type == TimeType.Work)
-            .ToList();
+        TotalTime = new TimeSpan();
+        TotalWorkTime = new TimeSpan();
 
-        TotalTime = SumTimeEntries(TimeEntries);
-        TotalWorkTime = SumTimeEntries(workTimeEntries);
+        for (int i = 0; i < TimeEntries.Count; i++)
+        {
+            var entry = TimeEntries[i];
+            TimeSpan duration = TimeSpan.Zero;
+
+            if (i < TimeEntries.Count - 1)
+            {
+                duration = TimeEntries[i + 1].Time - entry.Time;
+            }
+
+            entry.Duration = duration;
+
+            if (entry.Type != TimeType.DayEnd)
+            {
+                TotalTime += duration;
+                if (entry.Type == TimeType.Work)
+                {
+                    TotalWorkTime += duration;
+                }
+            }
+        }
     }
 
     private TimeSpan GetTimeLeftToWork() => TotalWorkTime - TimeSpan.FromHours(DailyWorkHours);
-
-    private TimeSpan SumTimeEntries(IEnumerable<TimeEntry> entries)
-    {
-        var totalTime = new TimeSpan();
-
-        foreach (var entry in entries)
-        {
-            totalTime += entry.Time;
-        }
-
-        return totalTime;
-    }
 }

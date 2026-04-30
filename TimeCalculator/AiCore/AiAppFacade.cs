@@ -77,7 +77,7 @@ Each entry follows:
             new()
             {
                 Name = nameof(SetType),
-                Description = "Start a new entry. Values: Work or Break.",
+                Description = "Start a new entry. Values: Work, Break, or DayEnd.",
                 Parameters = [new() { Name = "value", Description = "string" }],
             },
             new()
