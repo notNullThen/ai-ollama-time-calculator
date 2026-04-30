@@ -120,5 +120,5 @@ Each entry follows:
             },
         ];
 
-    private TimeEntry[] GetTimeEntriesTable() => [.. timeCalculator.TimeEntries.Values];
+    private TimeEntry[] GetTimeEntriesTable() => [.. timeCalculator.TimeEntries];
 }

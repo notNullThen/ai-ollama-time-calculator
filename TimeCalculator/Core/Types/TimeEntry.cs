@@ -4,6 +4,8 @@ namespace TimeCalculator.Core.Types;
 
 public class TimeEntry
 {
+    public Guid Id { get; set; } = Guid.NewGuid();
+
     [JsonPropertyName("timeEntry")]
     public TimeSpan Time { get; set; } = new();
     public TimeType Type { get; set; } = TimeType.Work;

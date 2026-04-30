@@ -4,7 +4,7 @@ namespace TimeCalculator.Core;
 
 public class TimeCalculatorProgramm
 {
-    public Dictionary<Guid, TimeEntry> TimeEntries = [];
+    public List<TimeEntry> TimeEntries = [];
 
     public TimeSpan TotalTime = new();
     public TimeSpan TotalWorkTime = new();
@@ -20,13 +20,18 @@ public class TimeCalculatorProgramm
 
     public void ReplaceEntryWithCurrent(Guid guid)
     {
-        TimeEntries[guid] = CurrentTimeEntry;
+        var index = TimeEntries.FindIndex(e => e.Id == guid);
+        if (index != -1)
+        {
+            CurrentTimeEntry.Id = guid;
+            TimeEntries[index] = CurrentTimeEntry;
+        }
         CalculateTotalTime();
     }
 
     public void RemoveTimeEntry(Guid guid)
     {
-        TimeEntries.Remove(guid);
+        TimeEntries.RemoveAll(e => e.Id == guid);
         CalculateTotalTime();
     }
 
@@ -52,7 +57,8 @@ public class TimeCalculatorProgramm
 
     public void AddTimeEntry()
     {
-        TimeEntries.Add(Guid.NewGuid(), CurrentTimeEntry);
+        CurrentTimeEntry.Id = Guid.NewGuid();
+        TimeEntries.Add(CurrentTimeEntry);
 
         CalculateTotalTime();
         CurrentTimeEntry = new();
@@ -71,8 +77,8 @@ public class TimeCalculatorProgramm
     public void CalculateTotalTime()
     {
         var workTimeEntries = TimeEntries
-            .Where(timeEntry => timeEntry.Value.Type == TimeType.Work)
-            .ToDictionary(pair => pair.Key, pair => pair.Value);
+            .Where(timeEntry => timeEntry.Type == TimeType.Work)
+            .ToList();
 
         TotalTime = SumTimeEntries(TimeEntries);
         TotalWorkTime = SumTimeEntries(workTimeEntries);
@@ -80,13 +86,13 @@ public class TimeCalculatorProgramm
 
     private TimeSpan GetTimeLeftToWork() => TotalWorkTime - TimeSpan.FromHours(DailyWorkHours);
 
-    private TimeSpan SumTimeEntries(Dictionary<Guid, TimeEntry> entries)
+    private TimeSpan SumTimeEntries(IEnumerable<TimeEntry> entries)
     {
         var totalTime = new TimeSpan();
 
         foreach (var entry in entries)
         {
-            totalTime += entry.Value.Time;
+            totalTime += entry.Time;
         }
 
         return totalTime;
