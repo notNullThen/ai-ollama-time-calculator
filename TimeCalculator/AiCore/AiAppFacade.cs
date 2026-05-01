@@ -1,5 +1,6 @@
 using AIOrchestrator.Core.AiAppFacade;
 using AIOrchestrator.Core.AiAppFacade.Types;
+using TimeCalculator.AiCore.Types;
 using TimeCalculator.Core;
 using TimeCalculator.Core.Types;
 
@@ -12,24 +13,24 @@ public sealed class AiAppFacade(TimeCalculatorProgramm timeCalculator) : AiAppFa
     // This demonstrates the AIOrchestrator ability to orchestrate complex logic
     // and execute multi-step sequences.
 
-    public void SetHours(string hours)
+    public void SetDaytimeHours(string hours)
     {
         timeCalculator.SetHours(int.Parse(hours));
     }
 
-    public void SetMinutes(string minutes)
+    public void SetDaytimeMinutes(string minutes)
     {
         timeCalculator.SetMinutes(int.Parse(minutes));
     }
 
-    public void SetRelativeHours(string hours)
+    public void SetDurationHours(string hours)
     {
-        timeCalculator.SetRelativeHours(int.Parse(hours));
+        timeCalculator.SetDurationHours(int.Parse(hours));
     }
 
-    public void SetRelativeMinutes(string minutes)
+    public void SetDurationMinutes(string minutes)
     {
-        timeCalculator.SetRelativeMinutes(int.Parse(minutes));
+        timeCalculator.SetDurationMinutes(int.Parse(minutes));
     }
 
     public void SetType(string type)
@@ -42,7 +43,7 @@ public sealed class AiAppFacade(TimeCalculatorProgramm timeCalculator) : AiAppFa
         timeCalculator.SetDescription(description);
     }
 
-    public TimeEntry[] AddTimeEntry()
+    public AiTimeEntry[] AddTimeEntry()
     {
         timeCalculator.AddTimeEntry();
         return GetTimeEntriesTable();
@@ -56,12 +57,13 @@ public sealed class AiAppFacade(TimeCalculatorProgramm timeCalculator) : AiAppFa
     public override string GetConstraints() =>
         @$"
 # CORE RULE
-Process the user request as a sequence of entries.
+You are filling the working day time report.
+Understand the user request as a working day sequence of activities which have specific start times, durations, and descriptions.
 Each entry MUST be completed by calling {nameof(AddTimeEntry)} before the next begins.
 
 # ENTRY FLOW
 Each entry follows:
-({nameof(SetType)}) → (set time OR set relative time OR {nameof(SetRemainedTime)}) → ({nameof(SetDescription)}) → ({nameof(AddTimeEntry)})
+({nameof(SetType)}) → ({nameof(SetDaytimeHours)}/{nameof(SetDaytimeMinutes)} OR {nameof(SetDurationHours)}/{nameof(SetDurationMinutes)} OR {nameof(SetRemainedTime)}) → ({nameof(SetDescription)}) → ({nameof(AddTimeEntry)})
 
 # STRICT RULES
 1. You MUST close an open entry with {nameof(AddTimeEntry)}.
@@ -74,26 +76,30 @@ Each entry follows:
         [
             new()
             {
-                Name = nameof(SetHours),
-                Description = "Set hours for the current entry (0-23). Provide only the value.",
+                Name = nameof(SetDaytimeHours),
+                Description =
+                    "Set hours for the current entry (0-23). Provide only the value. Use it when user specifies the time of the day in 24-hour format when activity starts (or ends which means this is the start of the next activity).",
                 Parameters = [new() { Name = "value", Description = "int" }],
             },
             new()
             {
-                Name = nameof(SetMinutes),
-                Description = "Set minutes for the current entry (0-59). Provide only the value.",
+                Name = nameof(SetDaytimeMinutes),
+                Description =
+                    "Set minutes for the current entry (0-59). Provide only the value. Use it when user specifies the exact time of the day in 24-hour format.",
                 Parameters = [new() { Name = "value", Description = "int" }],
             },
             new()
             {
-                Name = nameof(SetRelativeHours),
-                Description = "Set relative hours from the previous entry.",
+                Name = nameof(SetDurationHours),
+                Description =
+                    "Set duration in hours for the entry. Use it when user specifies activity the duration time.",
                 Parameters = [new() { Name = "value", Description = "int" }],
             },
             new()
             {
-                Name = nameof(SetRelativeMinutes),
-                Description = "Set relative minutes from the previous entry.",
+                Name = nameof(SetDurationMinutes),
+                Description =
+                    "Set duration in minutes for the entry. Use it when user specifies activity the duration time.",
                 Parameters = [new() { Name = "value", Description = "int" }],
             },
             new()
@@ -131,5 +137,14 @@ Each entry follows:
             },
         ];
 
-    private TimeEntry[] GetTimeEntriesTable() => [.. timeCalculator.TimeEntries];
+    private AiTimeEntry[] GetTimeEntriesTable() =>
+        timeCalculator
+            .TimeEntries.Select(entry => new AiTimeEntry
+            {
+                Time = entry.Time.ToFormattedString(),
+                Duration = entry.Duration.ToFormattedString(),
+                Type = entry.Type.ToString(),
+                Description = entry.Description,
+            })
+            .ToArray();
 }

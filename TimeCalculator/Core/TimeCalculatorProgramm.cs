@@ -12,8 +12,8 @@ public class TimeCalculatorProgramm
     public TimeEntry CurrentTimeEntry = new();
 
     public int DailyWorkHours = 0;
-    public int RelativeHours { get; set; }
-    public int RelativeMinutes { get; set; }
+    public int DurationHours { get; set; }
+    public int DurationMinutes { get; set; }
 
     public void SetType(TimeType type)
     {
@@ -44,15 +44,15 @@ public class TimeCalculatorProgramm
 
     public void SetMinutes(int minutes) => CurrentTimeEntry.Minutes = minutes;
 
-    public void SetRelativeHours(int hours) => RelativeHours = hours;
+    public void SetDurationHours(int hours) => DurationHours = hours;
 
-    public void SetRelativeMinutes(int minutes) => RelativeMinutes = minutes;
+    public void SetDurationMinutes(int minutes) => DurationMinutes = minutes;
 
     public void SetDescription(string description) => CurrentTimeEntry.Description = description;
 
     public void AddTimeEntry()
     {
-        CalculateRelativeTime();
+        CalculateDurationTime();
 
         CurrentTimeEntry.Id = Guid.NewGuid();
         TimeEntries.Add(CurrentTimeEntry);
@@ -101,17 +101,17 @@ public class TimeCalculatorProgramm
         }
     }
 
-    private void CalculateRelativeTime()
+    private void CalculateDurationTime()
     {
-        if (RelativeHours != 0 || RelativeMinutes != 0)
+        if (DurationHours != 0 || DurationMinutes != 0)
         {
             var lastTime = TimeEntries.Count > 0 ? TimeEntries.Last().Time : TimeSpan.Zero;
             CurrentTimeEntry.Time =
                 lastTime
-                + TimeSpan.FromHours(RelativeHours)
-                + TimeSpan.FromMinutes(RelativeMinutes);
-            RelativeHours = 0;
-            RelativeMinutes = 0;
+                + TimeSpan.FromHours(DurationHours)
+                + TimeSpan.FromMinutes(DurationMinutes);
+            DurationHours = 0;
+            DurationMinutes = 0;
         }
     }
 
