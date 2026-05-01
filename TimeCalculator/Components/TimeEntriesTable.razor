@@ -3,9 +3,7 @@
     <table class="table table-striped align-middle mb-0">
         <thead>
             <tr>
-                <th scope="col">Hours</th>
-                <th scope="col">Minutes</th>
-                <th scope="col">Formatted</th>
+                <th scope="col">Time</th>
                 <th scope="col">Duration</th>
                 <th scope="col">Type</th>
                 <th scope="col">Description</th>
@@ -18,8 +16,6 @@
                 var isZeroTime = entry.Time.IsZero();
 
                 <tr @key="entry.Id" class="@(isZeroTime ? "tc-zero-time-row" : null)">
-                    <td class="@(isZeroTime ? "text-muted" : null)">@entry.Time.Hours</td>
-                    <td class="@(isZeroTime ? "text-muted" : null)">@entry.Time.Minutes</td>
                     <td class="@(isZeroTime ? "text-muted" : null)">@entry.Time.ToFormattedString()</td>
                     <td class="@(isZeroTime ? "text-muted" : null)">@entry.Duration.ToFormattedString()</td>
                     <td class="@(isZeroTime ? "text-muted" : null)">@entry.Type</td>

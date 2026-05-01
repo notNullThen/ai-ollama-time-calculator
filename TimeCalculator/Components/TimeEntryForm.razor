@@ -16,8 +16,8 @@
                         <label class="form-label mb-1">Hours</label>
                         <input type="text" value="@TimeCalculator.CurrentTimeEntry.Hours.ToString("00")"
                                @onchange="@(e => TimeCalculator.SetHours(ParseHours(e.Value)))"
-                               class="form-control text-center px-1" style="width: 50px;"
-                               maxlength="2" inputmode="numeric" onfocus="this.select()" />
+                               class="form-control text-center px-1" style="width: 50px;" maxlength="2" inputmode="numeric"
+                               onfocus="this.select()" />
                     </div>
 
                     <div class="mb-2 text-muted fw-bold">:</div>
@@ -26,26 +26,28 @@
                         <label class="form-label mb-1">Minutes</label>
                         <input type="text" value="@TimeCalculator.CurrentTimeEntry.Minutes.ToString("00")"
                                @onchange="@(e => TimeCalculator.SetMinutes(ParseMinutes(e.Value)))"
-                               class="form-control text-center px-1" style="width: 50px;"
-                               maxlength="2" inputmode="numeric" onfocus="this.select()" />
+                               class="form-control text-center px-1" style="width: 50px;" maxlength="2" inputmode="numeric"
+                               onfocus="this.select()" />
                     </div>
                 </div>
 
-                <!-- Relative Time (Start In) -->
+                <!-- Duration Time (Start In) -->
                 <div class="d-flex flex-column">
                     <label class="form-label mb-1 small text-muted">Start in</label>
                     <div class="d-flex gap-2 align-items-center">
-                        <input type="text" value="@TimeCalculator.RelativeHours.ToString("00")"
-                               @onchange="@(e => TimeCalculator.SetRelativeHours(ParseHours(e.Value)))"
-                               class="form-control text-center px-1" style="width: 50px; height: 31px; font-size: 0.875rem;"
-                               maxlength="2" inputmode="numeric" onfocus="this.select()" />
+                        <input type="text" value="@TimeCalculator.DurationHours.ToString("00")"
+                               @onchange="@(e => TimeCalculator.SetDurationHours(ParseHours(e.Value)))"
+                               class="form-control text-center px-1"
+                               style="width: 50px; height: 31px; font-size: 0.875rem;" maxlength="2" inputmode="numeric"
+                               onfocus="this.select()" />
 
                         <div class="text-muted fw-bold">:</div>
 
-                        <input type="text" value="@TimeCalculator.RelativeMinutes.ToString("00")"
-                               @onchange="@(e => TimeCalculator.SetRelativeMinutes(ParseMinutes(e.Value)))"
-                               class="form-control text-center px-1" style="width: 50px; height: 31px; font-size: 0.875rem;"
-                               maxlength="2" inputmode="numeric" onfocus="this.select()" />
+                        <input type="text" value="@TimeCalculator.DurationMinutes.ToString("00")"
+                               @onchange="@(e => TimeCalculator.SetDurationMinutes(ParseMinutes(e.Value)))"
+                               class="form-control text-center px-1"
+                               style="width: 50px; height: 31px; font-size: 0.875rem;" maxlength="2" inputmode="numeric"
+                               onfocus="this.select()" />
                     </div>
                 </div>
             </div>
@@ -75,8 +77,7 @@
         <div class="d-flex flex-column">
             <label class="form-label mb-1">Description</label>
             <input type="text" value="@TimeCalculator.CurrentTimeEntry.Description"
-                   @onchange="@(e => TimeCalculator.SetDescription(ParseString(e.Value)))"
-                   class="form-control"
+                   @onchange="@(e => TimeCalculator.SetDescription(ParseString(e.Value)))" class="form-control"
                    placeholder="Optional description…" />
         </div>
 
@@ -152,8 +153,7 @@
         AiInteraction = new AiInteraction(TimeCalculator);
         AiInteraction.OnContextUpdated += OnContextUpdated;
 
-        // TODO: Remove after debug finished
-        AiInteraction.UserInput = "I worked for 4 hours 43 mins, then had 54 minutes lunch and after that worked till the end of my working day.";
+        AiInteraction.UserInput = "ok so started at 8:00 workin on refactoring auth module, then at 11:20 took break mayb 20min then back to work did frontend component cleanup and then at 13:45 lunch idk 45min then worked till end on api endpoint documentation";
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
