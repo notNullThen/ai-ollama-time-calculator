@@ -98,7 +98,14 @@
                     <label class="form-label mb-1">Explain it - we'll try to do it!</label>
                     <textarea @bind="AiInteraction.UserInput" class="form-control" style="height: 155px;"
                               placeholder="e.g., 'add 2 hours of work'"></textarea>
-                    <button class="btn btn-primary w-100" @onclick="AiInteraction.AskAsync">Do it!</button>
+                    <button class="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2" 
+                            @onclick="AiInteraction.AskAsync" disabled="@AiInteraction.IsBusy">
+                        <span>Do it!</span>
+                        @if (AiInteraction.IsBusy)
+                        {
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        }
+                    </button>
                 </div>
             }
         </div>
@@ -112,7 +119,14 @@
                 <label class="form-label mb-1">Explain it - we'll try to do it!</label>
                 <textarea @bind="AiInteraction.UserInput" class="form-control" style="height: 120px;"
                           placeholder="e.g., 'add 2 hours of work'"></textarea>
-                <button class="btn btn-primary w-100" @onclick="AiInteraction.AskAsync">Do it!</button>
+                <button class="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2" 
+                        @onclick="AiInteraction.AskAsync" disabled="@AiInteraction.IsBusy">
+                    <span>Do it!</span>
+                    @if (AiInteraction.IsBusy)
+                    {
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    }
+                </button>
             </div>
         }
     </div>
@@ -175,15 +189,31 @@
     {
         AiInteraction = new AiInteraction(TimeCalculator);
         AiInteraction.OnContextUpdated += OnContextUpdated;
+        AiInteraction.OnBusyChanged += (s, e) => InvokeAsync(StateHasChanged);
 
         AiInteraction.UserInput = "ok so started at 08:00 working on refactoring auth module, then at eleven twenty took a break, then at 11:40 back to work did frontend component cleanup, then at 13:45 lunch, then at 14:30 back to work till end on api endpoint documentation";
     }
+
+    private bool _lastShowDebugTooling;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
+            _lastShowDebugTooling = ShowDebugTooling;
+            if (ShowDebugTooling)
+            {
+                await JSRuntime.InvokeVoidAsync("setupAutoScroll", "container-debug", "btn-autoscroll-debug");
+            }
+        }
+        else if (ShowDebugTooling && !_lastShowDebugTooling)
+        {
+            _lastShowDebugTooling = true;
             await JSRuntime.InvokeVoidAsync("setupAutoScroll", "container-debug", "btn-autoscroll-debug");
+        }
+        else
+        {
+            _lastShowDebugTooling = ShowDebugTooling;
         }
     }
 

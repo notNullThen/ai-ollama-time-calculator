@@ -13,6 +13,21 @@ public class AiInteraction
     private readonly AiAppFacade _aiFacade;
 
     public event EventHandler<List<FunctionCallResponse>>? OnContextUpdated;
+    public event EventHandler? OnBusyChanged;
+
+    private bool _isBusy;
+    public bool IsBusy
+    {
+        get => _isBusy;
+        private set
+        {
+            if (_isBusy != value)
+            {
+                _isBusy = value;
+                OnBusyChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+    }
 
     public AiInteraction(TimeCalculatorProgramm timeCalculator)
     {
@@ -25,7 +40,12 @@ public class AiInteraction
 
     public async Task AskAsync()
     {
+        if (IsBusy) return;
+        IsBusy = true;
         await AiManager!.StartAsync(UserInput);
+        // Note: IsBusy is also set to false in the OnExit action of the facade
+        // but we ensure it's false here as well in case StartAsync finishes without Exit()
+        IsBusy = false;
     }
 
     public string GetContext() => AiManager!.ContextHandler.GetContextJson();
@@ -44,6 +64,7 @@ public class AiInteraction
             appInstance: _aiFacade,
             options: new() { Temperature = 0.0f }
         );
+        _aiFacade.OnExit = () => IsBusy = false;
         AiManager.ContextHandler.OnContextUpdated += InternalOnContextUpdated;
         UserInput = string.Empty;
     }
