@@ -1,26 +1,29 @@
 .header-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
     min-height: 3rem;
+    gap: 1rem;
+}
+
+.header-left {
+    justify-self: start;
 }
 
 .header-center {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-    z-index: 1;
+    justify-self: center;
 }
 
-.header-center * {
-    pointer-events: auto;
+.header-right {
+    justify-self: end;
 }
 
-@media (max-width: 992px) {
+@media (max-width: 1100px) {
     .header-center {
         display: none;
     }
     
     .header-row {
-        justify-content: space-between !important;
+        grid-template-columns: 1fr 1fr;
     }
 }
