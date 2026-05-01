@@ -12,8 +12,7 @@ public class TimeCalculatorProgramm
     public TimeEntry CurrentTimeEntry = new();
 
     public int DailyWorkHours = 0;
-    public int DurationHours { get; set; }
-    public int DurationMinutes { get; set; }
+    public TimeSpan Duration { get; set; }
 
     public void SetType(TimeType type)
     {
@@ -23,11 +22,15 @@ public class TimeCalculatorProgramm
     public void ReplaceEntryWithCurrent(Guid guid)
     {
         var index = TimeEntries.FindIndex(e => e.Id == guid);
-        if (index != -1)
+        if (index == -1)
         {
-            CurrentTimeEntry.Id = guid;
-            TimeEntries[index] = CurrentTimeEntry;
+            throw new Exception($"Entry with guid {guid} not found.");
         }
+
+        var newEntry = CurrentTimeEntry.Clone();
+        newEntry.Id = guid;
+        TimeEntries[index] = newEntry;
+
         CalculateTime();
     }
 
@@ -44,20 +47,32 @@ public class TimeCalculatorProgramm
 
     public void SetMinutes(int minutes) => CurrentTimeEntry.Minutes = minutes;
 
-    public void SetDurationHours(int hours) => DurationHours = hours;
+    public void SetDurationHours(int hours)
+    {
+        Duration = new(hours: hours, minutes: Duration.Minutes, seconds: Duration.Seconds);
+    }
 
-    public void SetDurationMinutes(int minutes) => DurationMinutes = minutes;
+    public void SetDurationMinutes(int minutes) =>
+        Duration = new(hours: Duration.Hours, minutes: minutes, seconds: Duration.Seconds);
 
     public void SetDescription(string description) => CurrentTimeEntry.Description = description;
 
-    public void AddTimeEntry()
+    public Guid AddTimeEntry()
     {
         CalculateDurationTime();
 
-        CurrentTimeEntry.Id = Guid.NewGuid();
-        TimeEntries.Add(CurrentTimeEntry);
+        var newEntry = CurrentTimeEntry.Clone();
+        newEntry.Id = Guid.NewGuid();
 
+        TimeEntries.Add(newEntry);
         CalculateTime();
+        ResetCurrentTimeEntry();
+
+        return newEntry.Id;
+    }
+
+    private void ResetCurrentTimeEntry()
+    {
         CurrentTimeEntry = new();
     }
 
@@ -75,6 +90,9 @@ public class TimeCalculatorProgramm
 
     public void CalculateTime()
     {
+        // Sort entries by time before calculating durations
+        TimeEntries = TimeEntries.OrderBy(e => e.Time).ToList();
+
         TotalTime = new TimeSpan();
         TotalWorkTime = new TimeSpan();
 
@@ -103,15 +121,11 @@ public class TimeCalculatorProgramm
 
     private void CalculateDurationTime()
     {
-        if (DurationHours != 0 || DurationMinutes != 0)
+        if (Duration != TimeSpan.Zero)
         {
             var lastTime = TimeEntries.Count > 0 ? TimeEntries.Last().Time : TimeSpan.Zero;
-            CurrentTimeEntry.Time =
-                lastTime
-                + TimeSpan.FromHours(DurationHours)
-                + TimeSpan.FromMinutes(DurationMinutes);
-            DurationHours = 0;
-            DurationMinutes = 0;
+            CurrentTimeEntry.Time = lastTime + Duration;
+            Duration = TimeSpan.Zero;
         }
     }
 

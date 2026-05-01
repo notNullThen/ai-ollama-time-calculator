@@ -35,7 +35,7 @@
                 <div class="d-flex flex-column">
                     <label class="form-label mb-1 small text-muted">Start in</label>
                     <div class="d-flex gap-2 align-items-center">
-                        <input type="text" value="@TimeCalculator.DurationHours.ToString("00")"
+                        <input type="text" value="@TimeCalculator.Duration.Hours.ToString("00")"
                                @onchange="@(e => TimeCalculator.SetDurationHours(ParseHours(e.Value)))"
                                class="form-control text-center px-1"
                                style="width: 50px; height: 31px; font-size: 0.875rem;" maxlength="2" inputmode="numeric"
@@ -43,7 +43,7 @@
 
                         <div class="text-muted fw-bold">:</div>
 
-                        <input type="text" value="@TimeCalculator.DurationMinutes.ToString("00")"
+                        <input type="text" value="@TimeCalculator.Duration.Minutes.ToString("00")"
                                @onchange="@(e => TimeCalculator.SetDurationMinutes(ParseMinutes(e.Value)))"
                                class="form-control text-center px-1"
                                style="width: 50px; height: 31px; font-size: 0.875rem;" maxlength="2" inputmode="numeric"
@@ -153,7 +153,7 @@
         AiInteraction = new AiInteraction(TimeCalculator);
         AiInteraction.OnContextUpdated += OnContextUpdated;
 
-        AiInteraction.UserInput = "ok so started at 8:00 workin on refactoring auth module, then at 11:20 took break mayb 20min then back to work did frontend component cleanup and then at 13:45 lunch idk 45min then worked till end on api endpoint documentation";
+        AiInteraction.UserInput = "ok so started at 08:00 working on refactoring auth module, then at eleven twenty took a break, then at 11:40 back to work did frontend component cleanup, then at 13:45 lunch, then at 14:30 back to work till end on api endpoint documentation";
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

@@ -26,4 +26,16 @@ public class TimeEntry
         get => Time.Minutes;
         set => Time = new TimeSpan(Time.Hours, value, Time.Seconds);
     }
+
+    public TimeEntry Clone()
+    {
+        return new TimeEntry
+        {
+            Id = Id,
+            Time = Time,
+            Type = Type,
+            Description = Description,
+            Duration = Duration,
+        };
+    }
 }
