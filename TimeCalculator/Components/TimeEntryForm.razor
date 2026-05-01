@@ -6,143 +6,166 @@
 
 <div class="d-flex flex-column flex-lg-row gap-4 align-items-start">
     <!-- Main Form Controls -->
-    <div class="d-flex flex-column gap-4" style="width: 100%; max-width: 400px;">
-        <!-- Time Inputs Section -->
-        <div class="d-flex gap-3 align-items-start">
-            <div class="d-flex flex-column gap-2">
-                <!-- Absolute Time -->
-                <div class="d-flex gap-2 align-items-end">
-                    <div class="d-flex flex-column">
-                        <label class="form-label mb-1">Hours</label>
-                        <input type="text" value="@TimeCalculator.CurrentTimeEntry.Hours.ToString("00")"
-                               @onchange="@(e => TimeCalculator.SetHours(ParseHours(e.Value)))"
-                               class="form-control text-center px-1" style="width: 50px;" maxlength="2" inputmode="numeric"
-                               onfocus="this.select()" />
+    <div class="d-flex flex-column gap-4" style="width: 100%; @(ShowDebugTooling ? "max-width: 400px;" : "")">
+        <div class="@(ShowDebugTooling ? "d-flex flex-column gap-4" : "d-flex flex-wrap gap-4 align-items-start")">
+            <!-- Left Group: Time Inputs, Description, and Action Buttons -->
+            <div class="d-flex flex-column gap-4" style="@(ShowDebugTooling ? "" : "width: 400px; max-width: 100%;")">
+                <!-- Time Inputs Section -->
+                <div class="d-flex gap-3 align-items-start">
+                    <div class="d-flex flex-column gap-2">
+                        <!-- Absolute Time -->
+                        <div class="d-flex gap-2 align-items-end">
+                            <div class="d-flex flex-column">
+                                <label class="form-label mb-1">Hours</label>
+                                <input type="text" value="@TimeCalculator.CurrentTimeEntry.Hours.ToString("00")"
+                                       @onchange="@(e => TimeCalculator.SetHours(ParseHours(e.Value)))"
+                                       class="form-control text-center px-1" style="width: 50px;" maxlength="2" inputmode="numeric"
+                                       onfocus="this.select()" />
+                            </div>
+
+                            <div class="mb-2 text-muted fw-bold">:</div>
+
+                            <div class="d-flex flex-column">
+                                <label class="form-label mb-1">Minutes</label>
+                                <input type="text" value="@TimeCalculator.CurrentTimeEntry.Minutes.ToString("00")"
+                                       @onchange="@(e => TimeCalculator.SetMinutes(ParseMinutes(e.Value)))"
+                                       class="form-control text-center px-1" style="width: 50px;" maxlength="2" inputmode="numeric"
+                                       onfocus="this.select()" />
+                            </div>
+                        </div>
+
+                        <!-- Duration Time (Start In) -->
+                        <div class="d-flex flex-column">
+                            <label class="form-label mb-1 small text-muted">Start in</label>
+                            <div class="d-flex gap-2 align-items-center">
+                                <input type="text" value="@TimeCalculator.Duration.Hours.ToString("00")"
+                                       @onchange="@(e => TimeCalculator.SetDurationHours(ParseHours(e.Value)))"
+                                       class="form-control text-center px-1"
+                                       style="width: 50px; height: 31px; font-size: 0.875rem;" maxlength="2" inputmode="numeric"
+                                       onfocus="this.select()" />
+
+                                <div class="text-muted fw-bold">:</div>
+
+                                <input type="text" value="@TimeCalculator.Duration.Minutes.ToString("00")"
+                                       @onchange="@(e => TimeCalculator.SetDurationMinutes(ParseMinutes(e.Value)))"
+                                       class="form-control text-center px-1"
+                                       style="width: 50px; height: 31px; font-size: 0.875rem;" maxlength="2" inputmode="numeric"
+                                       onfocus="this.select()" />
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="mb-2 text-muted fw-bold">:</div>
-
-                    <div class="d-flex flex-column">
-                        <label class="form-label mb-1">Minutes</label>
-                        <input type="text" value="@TimeCalculator.CurrentTimeEntry.Minutes.ToString("00")"
-                               @onchange="@(e => TimeCalculator.SetMinutes(ParseMinutes(e.Value)))"
-                               class="form-control text-center px-1" style="width: 50px;" maxlength="2" inputmode="numeric"
-                               onfocus="this.select()" />
+                    <div class="ms-auto pt-4">
+                        <div class="btn-group" role="group" aria-label="Time entry type">
+                            <button type="button" class="@GetTypeButtonClass(TimeType.Work)"
+                                    aria-pressed="@(IsTypeSelected(TimeType.Work))"
+                                    @onclick="() => TimeCalculator.SetType(TimeType.Work)">
+                                Work
+                            </button>
+                            <button type="button" class="@GetTypeButtonClass(TimeType.Break)"
+                                    aria-pressed="@(IsTypeSelected(TimeType.Break))"
+                                    @onclick="() => TimeCalculator.SetType(TimeType.Break)">
+                                Break
+                            </button>
+                            <button type="button" class="@GetTypeButtonClass(TimeType.DayEnd)"
+                                    aria-pressed="@(IsTypeSelected(TimeType.DayEnd))"
+                                    @onclick="() => TimeCalculator.SetType(TimeType.DayEnd)">
+                                End
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Duration Time (Start In) -->
+                <!-- Description Input -->
                 <div class="d-flex flex-column">
-                    <label class="form-label mb-1 small text-muted">Start in</label>
-                    <div class="d-flex gap-2 align-items-center">
-                        <input type="text" value="@TimeCalculator.Duration.Hours.ToString("00")"
-                               @onchange="@(e => TimeCalculator.SetDurationHours(ParseHours(e.Value)))"
-                               class="form-control text-center px-1"
-                               style="width: 50px; height: 31px; font-size: 0.875rem;" maxlength="2" inputmode="numeric"
-                               onfocus="this.select()" />
+                    <label class="form-label mb-1">Description</label>
+                    <input type="text" value="@TimeCalculator.CurrentTimeEntry.Description"
+                           @onchange="@(e => TimeCalculator.SetDescription(ParseString(e.Value)))" class="form-control"
+                           placeholder="Optional description…" />
+                </div>
 
-                        <div class="text-muted fw-bold">:</div>
-
-                        <input type="text" value="@TimeCalculator.Duration.Minutes.ToString("00")"
-                               @onchange="@(e => TimeCalculator.SetDurationMinutes(ParseMinutes(e.Value)))"
-                               class="form-control text-center px-1"
-                               style="width: 50px; height: 31px; font-size: 0.875rem;" maxlength="2" inputmode="numeric"
-                               onfocus="this.select()" />
-                    </div>
+                <!-- Action Buttons -->
+                <div class="d-flex gap-2">
+                    <button class="btn btn-primary" @onclick="AddTimeEntry">Add Entry</button>
+                    <button class="btn btn-outline-primary" @onclick="SetRemainedTime">Remained</button>
                 </div>
             </div>
 
-            <div class="ms-auto pt-4">
-                <div class="btn-group" role="group" aria-label="Time entry type">
-                    <button type="button" class="@GetTypeButtonClass(TimeType.Work)"
-                            aria-pressed="@(IsTypeSelected(TimeType.Work))"
-                            @onclick="() => TimeCalculator.SetType(TimeType.Work)">
-                        Work
-                    </button>
-                    <button type="button" class="@GetTypeButtonClass(TimeType.Break)"
-                            aria-pressed="@(IsTypeSelected(TimeType.Break))"
-                            @onclick="() => TimeCalculator.SetType(TimeType.Break)">
-                        Break
-                    </button>
-                    <button type="button" class="@GetTypeButtonClass(TimeType.DayEnd)"
-                            aria-pressed="@(IsTypeSelected(TimeType.DayEnd))"
-                            @onclick="() => TimeCalculator.SetType(TimeType.DayEnd)">
-                        End
-                    </button>
+            @if (!ShowDebugTooling)
+            {
+                <!-- AI Assistant Group (Side-by-side version) -->
+                <div class="d-flex flex-column gap-2 flex-grow-1" style="min-width: 280px;">
+                    <label class="form-label mb-1">Explain it - we'll try to do it!</label>
+                    <textarea @bind="AiInteraction.UserInput" class="form-control" style="height: 155px;"
+                              placeholder="e.g., 'add 2 hours of work'"></textarea>
+                    <button class="btn btn-primary w-100" @onclick="AiInteraction.AskAsync">Do it!</button>
                 </div>
+            }
+        </div>
+
+        @if (ShowDebugTooling)
+        {
+            <hr class="my-0 opacity-10" />
+
+            <!-- AI Assistant Group (Original bottom version) -->
+            <div class="d-flex flex-column gap-2">
+                <label class="form-label mb-1">Explain it - we'll try to do it!</label>
+                <textarea @bind="AiInteraction.UserInput" class="form-control" style="height: 120px;"
+                          placeholder="e.g., 'add 2 hours of work'"></textarea>
+                <button class="btn btn-primary w-100" @onclick="AiInteraction.AskAsync">Do it!</button>
             </div>
-        </div>
-
-        <!-- Description Input -->
-        <div class="d-flex flex-column">
-            <label class="form-label mb-1">Description</label>
-            <input type="text" value="@TimeCalculator.CurrentTimeEntry.Description"
-                   @onchange="@(e => TimeCalculator.SetDescription(ParseString(e.Value)))" class="form-control"
-                   placeholder="Optional description…" />
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="d-flex gap-2">
-            <button class="btn btn-primary" @onclick="AddTimeEntry">Add Entry</button>
-            <button class="btn btn-outline-primary" @onclick="SetRemainedTime">Remained</button>
-        </div>
-
-        <hr class="my-0 opacity-10" />
-
-        <!-- AI Assistant Group (Explain + Type nearby) -->
-        <div class="d-flex flex-column gap-2">
-            <label class="form-label mb-1">Explain it - we'll try to do it!</label>
-            <textarea @bind="AiInteraction.UserInput" class="form-control" style="height: 120px;"
-                      placeholder="e.g., 'add 2 hours of work'"></textarea>
-            <button class="btn btn-primary w-100" @onclick="AiInteraction.AskAsync">Do it!</button>
-        </div>
+        }
     </div>
 
-    <!-- AI Debug Details Sidebar -->
-    <div class="d-flex flex-column" style="flex: 1; min-width: 250px;">
-        <div class="d-flex justify-content-between align-items-center mb-1">
-            <label class="form-label mb-0">AI Debug Details</label>
-            <div>
-                <button id="btn-autoscroll-debug" class="btn btn-primary btn-sm me-1">Auto-scroll: ON</button>
-                <button class="btn btn-outline-primary btn-sm" onclick="window.copyToClipboard('ai-debug-raw', this)">
+    @if (ShowDebugTooling)
+    {
+        <!-- AI Debug Details Sidebar -->
+        <div class="d-flex flex-column" style="flex: 1; min-width: 250px;">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <label class="form-label mb-0">AI Debug Details</label>
+                <div>
+                    <button id="btn-autoscroll-debug" class="btn btn-primary btn-sm me-1">Auto-scroll: ON</button>
+                    <button class="btn btn-outline-primary btn-sm" onclick="window.copyToClipboard('ai-debug-raw', this)">
+                        Copy
+                    </button>
+                </div>
+            </div>
+            <div id="container-debug" class="form-control"
+                 style="height: 385px; overflow-y: auto; background-color: var(--tc-surface-2); border-color: var(--tc-border);">
+                <div style="padding: 5px; color: var(--tc-fg);">
+                    <JsonViewer JsonString="@AiInteraction.GetContext()" InitialExpandedDepth="3" />
+                </div>
+                <div id="ai-debug-raw"
+                     style="position: absolute; left: -9999px; top: -9999px; opacity: 0; pointer-events: none;"
+                     aria-hidden="true">@AiInteraction.GetContext()</div>
+            </div>
+        </div>
+
+        <!-- AI Management Prompt Sidebar -->
+        <div class="d-flex flex-column" style="flex: 1; min-width: 250px;">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <label class="form-label mb-0">AI Management Prompt</label>
+                <button class="btn btn-outline-primary btn-sm"
+                        onclick="window.copyToClipboard('ai-management-prompt-raw', this)">
                     Copy
                 </button>
             </div>
-        </div>
-        <div id="container-debug" class="form-control"
-             style="height: 385px; overflow-y: auto; background-color: var(--tc-surface-2); border-color: var(--tc-border);">
-            <div style="padding: 5px; color: var(--tc-fg);">
-                <JsonViewer JsonString="@AiInteraction.GetContext()" InitialExpandedDepth="3" />
+            <div class="form-control"
+                 style="height: 385px; overflow-y: auto; background-color: var(--tc-surface-2); border-color: var(--tc-border);">
+                <div style="padding: 5px; color: var(--tc-fg);">
+                    <JsonViewer JsonString="@AiInteraction.GetManagementPrompt()" InitialExpandedDepth="3" />
+                </div>
+                <div id="ai-management-prompt-raw"
+                     style="position: absolute; left: -9999px; top: -9999px; opacity: 0; pointer-events: none;"
+                     aria-hidden="true">@AiInteraction.GetManagementPrompt()</div>
             </div>
-            <div id="ai-debug-raw"
-                 style="position: absolute; left: -9999px; top: -9999px; opacity: 0; pointer-events: none;"
-                 aria-hidden="true">@AiInteraction.GetContext()</div>
         </div>
-    </div>
-
-    <!-- AI Management Prompt Sidebar -->
-    <div class="d-flex flex-column" style="flex: 1; min-width: 250px;">
-        <div class="d-flex justify-content-between align-items-center mb-1">
-            <label class="form-label mb-0">AI Management Prompt</label>
-            <button class="btn btn-outline-primary btn-sm"
-                    onclick="window.copyToClipboard('ai-management-prompt-raw', this)">
-                Copy
-            </button>
-        </div>
-        <div class="form-control"
-             style="height: 385px; overflow-y: auto; background-color: var(--tc-surface-2); border-color: var(--tc-border);">
-            <div style="padding: 5px; color: var(--tc-fg);">
-                <JsonViewer JsonString="@AiInteraction.GetManagementPrompt()" InitialExpandedDepth="3" />
-            </div>
-            <div id="ai-management-prompt-raw"
-                 style="position: absolute; left: -9999px; top: -9999px; opacity: 0; pointer-events: none;"
-                 aria-hidden="true">@AiInteraction.GetManagementPrompt()</div>
-        </div>
-    </div>
+    }
 </div>
 
 @code {
     [Parameter, EditorRequired] public TimeCalculatorProgramm TimeCalculator { get; set; } = default!;
+    [Parameter] public bool ShowDebugTooling { get; set; } = true;
 
     public AiInteraction AiInteraction { get; private set; } = default!;
 

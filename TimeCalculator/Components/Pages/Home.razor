@@ -39,12 +39,15 @@
 
         @* Right Section: Utilities *@
         <div class="header-right d-flex align-items-center gap-3">
+            <button class="btn btn-sm btn-outline-primary" @onclick="ToggleDebugTooling">
+                @(_showDebugTooling ? "Hide Debug Tooling" : "Show Debug Tooling")
+            </button>
             <a href="https://learn.microsoft.com/aspnet/core/" target="_blank" class="text-decoration-none" style="white-space: nowrap;">About</a>
             <ThemeToggle />
         </div>
     </div>
 
-    <TimeEntryForm TimeCalculator="timeCalculator" OnChanged="OnCalculatorChanged"/>
+    <TimeEntryForm TimeCalculator="timeCalculator" OnChanged="OnCalculatorChanged" ShowDebugTooling="_showDebugTooling"/>
 
     <h2 class="mt-4">Time Entries</h2>
 
@@ -68,6 +71,12 @@
         { DailyWorkHours = 8 };
 
     private bool _isDailyWorkTimeInputVisible;
+    private bool _showDebugTooling = true;
+
+    private void ToggleDebugTooling()
+    {
+        _showDebugTooling = !_showDebugTooling;
+    }
 
     private void EditDailyWorkTime()
     {
