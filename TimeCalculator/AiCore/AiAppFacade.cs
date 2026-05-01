@@ -1,5 +1,7 @@
+using System.Text.Json;
 using AIOrchestrator.Core.AiAppFacade;
 using AIOrchestrator.Core.AiAppFacade.Types;
+using TimeCalculator.AiCore.Types;
 using TimeCalculator.Core;
 using TimeCalculator.Core.Types;
 
@@ -11,6 +13,11 @@ public sealed class AiAppFacade(TimeCalculatorProgramm timeCalculator) : AiAppFa
     // to achieve the goal instead of a lower number of functions.
     // This demonstrates the AIOrchestrator ability to orchestrate complex logic
     // and execute multi-step sequences.
+
+    private static readonly JsonSerializerOptions PrettyJsonSerializerOptions = new()
+    {
+        WriteIndented = true,
+    };
 
     public void SetDuration(string hours) => timeCalculator.SetDurationHours(int.Parse(hours));
 
@@ -47,6 +54,9 @@ public sealed class AiAppFacade(TimeCalculatorProgramm timeCalculator) : AiAppFa
         @$"
 You are filling the working day time report.
 Understand the user request as a working day sequence of activities which have specific start times, durations, and descriptions.
+
+Current time entries table:
+{GetTimeEntriesTable()}
 ";
 
     public override AppDescription GetDescription() =>
@@ -115,4 +125,20 @@ Understand the user request as a working day sequence of activities which have s
     }
 
     private void SetType(string type) => timeCalculator.SetType(Enum.Parse<TimeType>(type));
+
+    private string GetTimeEntriesTable()
+    {
+        var aiTimeEntries = timeCalculator
+            .TimeEntries.Select(entry => new AiTimeEntry
+            {
+                Id = entry.Id.ToString(),
+                Time = entry.Time.ToString(@"hh\:mm"),
+                Duration = entry.Duration.ToString(@"hh\:mm"),
+                Type = entry.Type.ToString(),
+                Description = entry.Description,
+            })
+            .ToArray();
+
+        return JsonSerializer.Serialize(aiTimeEntries, PrettyJsonSerializerOptions);
+    }
 }
