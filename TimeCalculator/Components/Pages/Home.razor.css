@@ -1,0 +1,26 @@
+.header-row {
+    min-height: 3rem;
+}
+
+.header-center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.header-center * {
+    pointer-events: auto;
+}
+
+@media (max-width: 992px) {
+    .header-center {
+        display: none;
+    }
+    
+    .header-row {
+        justify-content: space-between !important;
+    }
+}
