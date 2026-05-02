@@ -1,15 +1,17 @@
 # AI Time Manager
 
 ### AI-powered Time Data Management with deterministic LLM function calling  
-Built with **.NET 10** and **Blazor**
 
-Runs locally using **Ollama (gemma4:e4b)**
+### 🎬 YouTube Video Demo: https://youtu.be/ZoJmzfI-muc
 
 ---
 
-### Uses custom AIOrchestrator NuGet package:
+- Runs locally using **Ollama (gemma4:e4b)**
+- Uses custom AIOrchestrator NuGet package:
 [![NuGet](https://img.shields.io/nuget/v/AIOrchestrator)](https://www.nuget.org/packages/AIOrchestrator)
 [![GitHub](https://img.shields.io/badge/github-repo-black.svg)](https://github.com/notNullThen/ai-orchestrator-dotnet)
+
+---
 
 <img src="assets/screenshot.png" alt="App Screenshot" width="600" />
 
