@@ -14,7 +14,7 @@ Runs on Ollama - gemma4:e4b.
 
 The web application processes human input and fills the time data.
 
-[AIOrchestrator](https://www.nuget.org/packages/AIOrchestrator) has access to `SetHours(int)`, `SetMinutes(int)`, `SetType(Work/Break)`, `SetRemainedTime()` and `AddTimeEntry()` methods.
+[AIOrchestrator](https://www.nuget.org/packages/AIOrchestrator) has access to `AddTimeEntry(time, type, description)`, `ReplaceEntry(guid, time, type, description)`, and `EndTheDay()` methods.
 
 ## AI Assistant Setup
 
