@@ -1,7 +1,5 @@
 # AI Time Manager
 
-> **Architecture Note:** I intentionally use multiple fine-grained functions to achieve the goal instead of a lower number of functions. This demonstrates the [AIOrchestrator NuGet package](https://www.nuget.org/packages/AIOrchestrator) ability to orchestrate complex logic and execute multi-step sequences.
-
 ### A basic concept of Time Data Management application with **AI assistance** functionality built with **.NET 10** and **Blazor**.
 
 Runs on Ollama - gemma4:e4b.
