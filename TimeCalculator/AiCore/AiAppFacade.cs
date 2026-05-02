@@ -14,6 +14,8 @@ public sealed class AiAppFacade(TimeCalculatorProgramm timeCalculator) : AiAppFa
     // This demonstrates the AIOrchestrator ability to orchestrate complex logic
     // and execute multi-step sequences.
 
+    private const string TimeFormat = @"hh\:mm";
+
     private static readonly JsonSerializerOptions PrettyJsonSerializerOptions = new()
     {
         WriteIndented = true,
@@ -68,7 +70,7 @@ Current time entries table:
                     "Adds new time entry with specified time and type. Returns the id of the created entry.",
                 Parameters =
                 [
-                    new() { Name = "time", Description = "Time in format HH:mm" },
+                    new() { Name = "time", Description = $"Time in format {TimeFormat}" },
                     new()
                     {
                         Name = "type",
@@ -91,7 +93,7 @@ Current time entries table:
                 Parameters =
                 [
                     new() { Name = "guid", Description = "Id of the entry to replace." },
-                    new() { Name = "time", Description = "Time in format HH:mm" },
+                    new() { Name = "time", Description = $"Time in format {TimeFormat}" },
                     new()
                     {
                         Name = "type",
@@ -119,7 +121,7 @@ Current time entries table:
     {
         timeCalculator.CurrentTimeEntry.Time = TimeSpan.ParseExact(
             input: time,
-            format: @"hh\:mm",
+            format: TimeFormat,
             formatProvider: null
         );
     }
@@ -132,8 +134,8 @@ Current time entries table:
             .TimeEntries.Select(entry => new AiTimeEntry
             {
                 Id = entry.Id.ToString(),
-                Time = entry.Time.ToString(@"hh\:mm"),
-                Duration = entry.Duration.ToString(@"hh\:mm"),
+                Time = entry.Time.ToString(TimeFormat),
+                Duration = entry.Duration.ToString(TimeFormat),
                 Type = entry.Type.ToString(),
                 Description = entry.Description,
             })
