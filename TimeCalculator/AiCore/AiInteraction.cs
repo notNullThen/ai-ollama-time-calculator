@@ -56,6 +56,10 @@ public class AiInteraction
             await _logger.LogErrorAsync($"AI Error: {ex.Message}", ex);
             throw;
         }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
     public string GetContext() => AiManager!.ContextHandler.GetContextJson();
