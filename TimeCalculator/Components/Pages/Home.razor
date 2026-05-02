@@ -39,15 +39,43 @@
 
         @* Right Section: Utilities *@
         <div class="header-right d-flex align-items-center gap-3">
+            <button class="btn btn-sm btn-outline-primary" @onclick="ToggleSettings">
+                <i class="bi bi-gear-fill"></i> AI Settings
+            </button>
             <button class="btn btn-sm btn-outline-primary" @onclick="ToggleDebugTooling">
-                @(_showDebugTooling ? "Hide Debug Tooling" : "Show Debug Tooling")
+                @(_showDebugTooling ? "Hide Debug" : "Show Debug")
             </button>
             <a href="https://learn.microsoft.com/aspnet/core/" target="_blank" class="text-decoration-none" style="white-space: nowrap;">About</a>
             <ThemeToggle />
         </div>
     </div>
 
-    <TimeEntryForm TimeCalculator="timeCalculator" OnChanged="OnCalculatorChanged" ShowDebugTooling="_showDebugTooling"/>
+    @if (_showSettings)
+    {
+        <div class="card mb-4 border-primary shadow-sm" style="background-color: var(--tc-surface-1);">
+            <div class="card-body">
+                <h5 class="card-title text-primary"><i class="bi bi-gear-fill me-2"></i>AI Connection Settings</h5>
+                <p class="small text-muted mb-3">
+                    To call a model on your local PC from a hosted server, ensure <code>OLLAMA_ORIGINS="*"</code> environment variable is set on your PC (Ollama server).
+                </p>
+                <div class="row g-3">
+                    <div class="col-md-8">
+                        <label class="form-label small">Ollama URL</label>
+                        <input type="text" class="form-control form-control-sm" @bind="timeCalculator.AiSettings.BaseUrl" placeholder="http://localhost:11434" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small">Model Name</label>
+                        <input type="text" class="form-control form-control-sm" @bind="timeCalculator.AiSettings.ModelName" placeholder="gemma4:e4b" />
+                    </div>
+                </div>
+                <div class="mt-3 d-flex justify-content-end">
+                    <button class="btn btn-primary btn-sm" @onclick="SaveSettings">Apply & Reload AI</button>
+                </div>
+            </div>
+        </div>
+    }
+
+    <TimeEntryForm @ref="_timeEntryForm" TimeCalculator="timeCalculator" OnChanged="OnCalculatorChanged" ShowDebugTooling="_showDebugTooling"/>
 
     <h2 class="mt-4">Time Entries</h2>
 
@@ -70,12 +98,27 @@
     private TimeCalculatorProgramm timeCalculator = new()
         { DailyWorkHours = 8 };
 
+    private TimeEntryForm? _timeEntryForm;
+
     private bool _isDailyWorkTimeInputVisible;
     private bool _showDebugTooling = true;
+    private bool _showSettings;
 
     private void ToggleDebugTooling()
     {
         _showDebugTooling = !_showDebugTooling;
+    }
+
+    private void ToggleSettings()
+    {
+        _showSettings = !_showSettings;
+    }
+
+    private void SaveSettings()
+    {
+        _showSettings = false;
+        _timeEntryForm?.ReInitializeAi();
+        OnCalculatorChanged();
     }
 
     private void EditDailyWorkTime()

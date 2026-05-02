@@ -255,4 +255,10 @@
     private int ParseHours(object? value) => Math.Min(23, ParseInt(value));
     private int ParseMinutes(object? value) => Math.Min(59, ParseInt(value));
     private string ParseString(object? value) => value?.ToString() ?? string.Empty;
+
+    public void ReInitializeAi()
+    {
+        AiInteraction.Init();
+        StateHasChanged();
+    }
 }

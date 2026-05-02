@@ -13,6 +13,7 @@ public class TimeCalculatorProgramm
 
     public int DailyWorkHours = 0;
     public TimeSpan Duration { get; set; }
+    public AiSettings AiSettings { get; set; } = new();
 
     public void SetType(TimeType type)
     {

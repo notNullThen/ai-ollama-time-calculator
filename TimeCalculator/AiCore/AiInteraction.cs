@@ -13,6 +13,7 @@ public class AiInteraction
 
     private readonly AiAppFacade _aiFacade;
     private readonly IConsoleLogger _logger;
+    private readonly TimeCalculatorProgramm _timeCalculator;
 
     public event EventHandler<List<FunctionCallResponse>>? OnContextUpdated;
     public event EventHandler? OnBusyChanged;
@@ -35,11 +36,11 @@ public class AiInteraction
     {
         _aiFacade = new AiAppFacade(timeCalculator);
         _logger = logger;
+        _timeCalculator = timeCalculator;
         UserInput = string.Empty;
         Init();
     }
 
-    private const string ModelName = "gemma4:e4b";
 
     public async Task AskAsync()
     {
@@ -69,13 +70,13 @@ public class AiInteraction
         }
 
         AiManager = new(
-            modelName: ModelName,
+            modelName: _timeCalculator.AiSettings.ModelName,
             appInstance: _aiFacade,
-            options: new() { Temperature = 0.0f }
+            options: new() { Temperature = 0.0f },
+            ollamaBaseUrl: _timeCalculator.AiSettings.BaseUrl
         );
         _aiFacade.OnExit = () => IsBusy = false;
         AiManager.ContextHandler.OnContextUpdated += InternalOnContextUpdated;
-        UserInput = string.Empty;
     }
 
     private void InternalOnContextUpdated(object? sender, List<FunctionCallResponse> e)
