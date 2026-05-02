@@ -1,6 +1,7 @@
 using AIOrchestrator.Core;
 using AIOrchestrator.Core.Types;
 using TimeCalculator.Core;
+using TimeCalculator.Services;
 
 namespace TimeCalculator.AiCore;
 
@@ -11,6 +12,7 @@ public class AiInteraction
     public string UserInput { get; set; }
 
     private readonly AiAppFacade _aiFacade;
+    private readonly IConsoleLogger _logger;
 
     public event EventHandler<List<FunctionCallResponse>>? OnContextUpdated;
     public event EventHandler? OnBusyChanged;
@@ -29,9 +31,10 @@ public class AiInteraction
         }
     }
 
-    public AiInteraction(TimeCalculatorProgramm timeCalculator)
+    public AiInteraction(TimeCalculatorProgramm timeCalculator, IConsoleLogger logger)
     {
         _aiFacade = new AiAppFacade(timeCalculator);
+        _logger = logger;
         UserInput = string.Empty;
         Init();
     }
@@ -40,12 +43,18 @@ public class AiInteraction
 
     public async Task AskAsync()
     {
-        if (IsBusy) return;
+        if (IsBusy)
+            return;
         IsBusy = true;
-        await AiManager!.StartAsync(UserInput);
-        // Note: IsBusy is also set to false in the OnExit action of the facade
-        // but we ensure it's false here as well in case StartAsync finishes without Exit()
-        IsBusy = false;
+        try
+        {
+            await AiManager!.StartAsync(UserInput);
+        }
+        catch (Exception ex)
+        {
+            await _logger.LogErrorAsync($"AI Error: {ex.Message}", ex);
+            throw;
+        }
     }
 
     public string GetContext() => AiManager!.ContextHandler.GetContextJson();

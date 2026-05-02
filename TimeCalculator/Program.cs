@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
 
 builder.Services.AddScoped<ThemeService>();
+builder.Services.AddScoped<IConsoleLogger, ConsoleLogger>();
 
 var app = builder.Build();
 

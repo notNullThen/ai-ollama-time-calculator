@@ -3,6 +3,7 @@
 @using TimeCalculator.Core.Types
 @using AIOrchestrator.Core.Types
 @inject IJSRuntime JSRuntime
+@inject IConsoleLogger ConsoleLogger
 
 <div class="d-flex flex-column flex-lg-row gap-4 align-items-start">
     <!-- Main Form Controls -->
@@ -187,7 +188,7 @@
 
     protected override void OnInitialized()
     {
-        AiInteraction = new AiInteraction(TimeCalculator);
+        AiInteraction = new AiInteraction(TimeCalculator, ConsoleLogger);
         AiInteraction.OnContextUpdated += OnContextUpdated;
         AiInteraction.OnBusyChanged += (s, e) => InvokeAsync(StateHasChanged);
 
