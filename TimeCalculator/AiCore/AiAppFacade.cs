@@ -21,7 +21,17 @@ public sealed class AiAppFacade(TimeCalculatorProgramm timeCalculator) : AiAppFa
         WriteIndented = true,
     };
 
-    public void SetDuration(string hours) => timeCalculator.SetDurationHours(int.Parse(hours));
+    public void SetDuration(string hours)
+    {
+        try
+        {
+            timeCalculator.SetDurationHours(int.Parse(hours));
+        }
+        catch (Exception)
+        {
+            throw new ArgumentException($"Hours should have {TimeFormat} format. It was: {hours}");
+        }
+    }
 
     public Guid AddTimeEntry(string time, string type, string description)
     {
@@ -34,7 +44,15 @@ public sealed class AiAppFacade(TimeCalculatorProgramm timeCalculator) : AiAppFa
 
     public Guid ReplaceEntry(string guid, string time, string type, string description)
     {
-        var parsedGuid = Guid.Parse(guid);
+        Guid parsedGuid;
+        try
+        {
+            parsedGuid = Guid.Parse(guid);
+        }
+        catch (Exception)
+        {
+            throw new ArgumentException($"Invalid GUID format. It was: {guid}");
+        }
 
         SetTime(time);
         SetType(type);
@@ -119,14 +137,32 @@ Current time entries table:
 
     private void SetTime(string time)
     {
-        timeCalculator.CurrentTimeEntry.Time = TimeSpan.ParseExact(
-            input: time,
-            format: TimeFormat,
-            formatProvider: null
-        );
+        try
+        {
+            timeCalculator.CurrentTimeEntry.Time = TimeSpan.ParseExact(
+                input: time,
+                format: TimeFormat,
+                formatProvider: null
+            );
+        }
+        catch (Exception)
+        {
+            throw new ArgumentException($"Time should be in format {TimeFormat}. It was: {time}");
+        }
     }
 
-    private void SetType(string type) => timeCalculator.SetType(Enum.Parse<TimeType>(type));
+    private void SetType(string type)
+    {
+        try
+        {
+            timeCalculator.SetType(Enum.Parse<TimeType>(type));
+        }
+        catch (Exception)
+        {
+            var validTypes = string.Join(", ", Enum.GetNames(typeof(TimeType)));
+            throw new ArgumentException($"Type should be one of: {validTypes}. It was: {type}");
+        }
+    }
 
     private string GetTimeEntriesTable()
     {
