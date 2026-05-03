@@ -139,11 +139,7 @@ Current time entries table:
     {
         try
         {
-            timeCalculator.CurrentTimeEntry.Time = TimeSpan.ParseExact(
-                input: time,
-                format: TimeFormat,
-                formatProvider: null
-            );
+            timeCalculator.CurrentTimeEntry.Time = TimeSpan.Parse(input: time);
         }
         catch (Exception)
         {
