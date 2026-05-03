@@ -9,11 +9,6 @@ namespace TimeCalculator.AiCore;
 
 public sealed class AiAppFacade(TimeCalculatorProgramm timeCalculator) : AiAppFacadeBase
 {
-    // Architecture Note: I intentionally use multiple fine-grained functions
-    // to achieve the goal instead of a lower number of functions.
-    // This demonstrates the AIOrchestrator ability to orchestrate complex logic
-    // and execute multi-step sequences.
-
     private const string TimeFormat = @"hh\:mm";
 
     private static readonly JsonSerializerOptions PrettyJsonSerializerOptions = new()
@@ -93,7 +88,7 @@ Current time entries table:
                     {
                         Name = "type",
                         Description =
-                            $"Type of the time entry, can be only {nameof(TimeType.Work)}, {nameof(TimeType.Break)}.",
+                            $"Type of the time entry, can be ONLY - {string.Join(", ", Enum.GetNames<TimeType>())}.",
                     },
                     new()
                     {
@@ -116,7 +111,7 @@ Current time entries table:
                     {
                         Name = "type",
                         Description =
-                            $"Type of the time entry, can be only {nameof(TimeType.Work)}, {nameof(TimeType.Break)}.",
+                            $"Type of the time entry, can be ONLY - {string.Join(", ", Enum.GetNames<TimeType>())}.",
                     },
                     new()
                     {
