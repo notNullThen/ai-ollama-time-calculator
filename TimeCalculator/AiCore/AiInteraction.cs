@@ -41,7 +41,6 @@ public class AiInteraction
         Init();
     }
 
-
     public async Task AskAsync()
     {
         if (IsBusy)
@@ -77,7 +76,8 @@ public class AiInteraction
             modelName: _timeCalculator.AiSettings.ModelName,
             appInstance: _aiFacade,
             options: new() { Temperature = 0.0f },
-            ollamaBaseUrl: _timeCalculator.AiSettings.BaseUrl
+            ollamaBaseUrl: _timeCalculator.AiSettings.BaseUrl,
+            ollamaHttpTimeout: TimeSpan.FromMinutes(3)
         );
         _aiFacade.OnExit = () => IsBusy = false;
         AiManager.ContextHandler.OnContextUpdated += InternalOnContextUpdated;
