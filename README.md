@@ -19,12 +19,32 @@
 
 ## 🚀 Overview
 
-This project demonstrates a different approach to AI integration:
+The **Gemma4:e4b** LLM orchestrates a simple time management web app, which results in a complete working day report based on user input.
 
-👉 The LLM does not generate free-form responses  
-👉 It **decides which function to call**
+The orchestration logic is implemented as a reusable AIOrchestrator NuGet package, so it can be plugged into any C# project.
 
-The system converts messy, natural user input into structured time tracking data through **strict JSON-based function calling**.
+Architecture of current demo:
+
+```
+┌──────────────────────────────────────────┐
+│            Blazor C# Web App             │
+│  (App + Behavior Rules & Function Defs)  │
+└──────────────────────────────────────────┘
+                     │
+                     ▼
+┌──────────────────────────────────────────┐
+│          AIOrchestrator (NuGet)          │
+│    (Context, Execution & Processing)     │
+└──────────────────────────────────────────┘
+                     │
+                     ▼
+┌──────────────────────────────────────────┐
+│           Ollama (Gemma 4 LLM)           │
+│            (Local Runtime)               │
+└──────────────────────────────────────────┘
+```
+
+As a result, the LLM calls functions step by step using updated state and history.
 
 ---
 
