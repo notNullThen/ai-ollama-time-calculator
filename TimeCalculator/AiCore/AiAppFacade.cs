@@ -69,6 +69,7 @@ public sealed class AiAppFacade(TimeCalculatorProgramm timeCalculator) : AiAppFa
         @$"
 You are filling the working day time report.
 Understand the user request as a working day sequence of activities which have specific start times, durations, and descriptions.
+Dont call same functions with same parameters multiple times in a row.
 
 Current time entries table:
 {GetTimeEntriesTable()}
@@ -88,7 +89,7 @@ Current time entries table:
                     {
                         Name = "type",
                         Description =
-                            $"Type of the time entry, can be ONLY - {string.Join(", ", Enum.GetNames<TimeType>())}.",
+                            $"Type of the time entry. MUST NOT be anything else than - {string.Join(", ", Enum.GetNames<TimeType>())}.",
                     },
                     new()
                     {
@@ -111,7 +112,7 @@ Current time entries table:
                     {
                         Name = "type",
                         Description =
-                            $"Type of the time entry, can be ONLY - {string.Join(", ", Enum.GetNames<TimeType>())}.",
+                            $"Type of the time entry. MUST NOT be anything else than - {string.Join(", ", Enum.GetNames<TimeType>())}.",
                     },
                     new()
                     {
